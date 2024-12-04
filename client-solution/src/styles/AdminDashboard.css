@@ -1,0 +1,137 @@
+.admin-dashboard {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.update-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.update-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.error-message {
+    padding: 10px;
+    background-color: #ffebee;
+    color: #c62828;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.requests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.request-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    /* Додаємо плавний перехід для всіх властивостей */
+    transition: all 0.3s ease;
+    /* Початкове положення */
+    transform: translateY(0) scale(1);
+}
+
+.request-card:hover {
+    /* При наведенні карточка трохи піднімається і збільшується */
+    transform: translateY(-5px) scale(1.02);
+    /* Також можна додати більш виразну тінь */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-dots {
+    cursor: pointer;
+}
+
+.patient-id {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.info-row {
+    margin-bottom: 10px;
+    padding: 5px 0;
+}
+
+.info-row .label {
+    color: #666;
+    font-size: 0.9em;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.info-row span:not(.label) {
+    color: #333;
+}
+
+.label {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.card-footer {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    background-color: #fff3e0;
+    color: #ef6c00;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.assign-doctor-button {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.assign-doctor-button:hover {
+    background-color: #2980b9;
+}
