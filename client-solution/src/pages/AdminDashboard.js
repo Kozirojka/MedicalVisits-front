@@ -52,15 +52,15 @@ export default function AdminDashboard() {
 
     const formatDateTime = (dateTime) => {
         if (!dateTime) return 'Не вказано';
-        return new Date(dateTime).toLocaleString('uk-UA', {
-            year: 'numeric',
-            month: 'long',
+        const date = new Date(dateTime);
+        return new Intl.DateTimeFormat('uk-UA', {
             day: 'numeric',
+            month: 'long',
+            year: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
-        });
+        }).format(date) + ' р.';
     };
-
 
     return (
         <div className="admin-dashboard" style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -145,9 +145,13 @@ export default function AdminDashboard() {
                             </div>
 
                             <div style={{ marginBottom: '10px' }}>
-                                <div style={{ color: '#666', fontSize: '0.9em' }}>Адреса:</div>
-                                <div>{request.address ? request.address.toString() : 'Не вказано'}</div>
-                            </div>
+    <div style={{ color: '#666', fontSize: '0.9em' }}>Адреса:</div>
+    <div>
+        {request.address ? 
+            `${request.address.city}, ${request.address.street}, ${request.address.building}, кв.${request.address.apartment}` 
+            : 'Не вказано'}
+    </div>
+</div>
                         </div>
 
                         <div style={{
