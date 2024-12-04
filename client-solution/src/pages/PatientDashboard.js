@@ -3,8 +3,12 @@ import { useState } from 'react';
 import CreateVisitModal from '../components/CreateVisitModal';
 import '../styles/PatientDashboard.css';
 
+
+
+
 export default function PatientDashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
 
     return (
         <div className="patient-dashboard">
@@ -20,7 +24,7 @@ export default function PatientDashboard() {
                         className="create-visit-button"
                         onClick={() => setIsModalOpen(true)}
                     >
-                        Create visit request
+                         Create visit request
                     </button>
 
                     <CreateVisitModal 
