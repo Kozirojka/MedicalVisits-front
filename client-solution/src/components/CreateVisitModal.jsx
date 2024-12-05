@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// Функція для відправки запиту на сервер
 async function createVisitRequest(visitData) {
    try {
 
@@ -33,22 +32,19 @@ async function createVisitRequest(visitData) {
 }
 
 export default function CreateVisitModal({ isOpen, onClose }) {
-   // Стани для управління формою та процесом відправки
    const [isLoading, setIsLoading] = useState(false);
    const [error, setError] = useState(null);
    
-   // Стан для зберігання даних форми
    const [visitData, setVisitData] = useState({
        dateTime: '',
        dateTimeEnd: '',
        description: '',
-       address: '', // Нове поле
-       isRegular: false, // Нове поле
+       address: '', 
+       isRegular: false,
        hasMedicine: false,
        requiredMedications: ''
    });
 
-   // Обробник змін в полях форми
    const handleInputChange = (e) => {
        const { name, value, type, checked } = e.target;
        setVisitData(prev => ({
@@ -57,7 +53,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
        }));
    };
 
-   // Обробник відправки форми
    const handleSubmit = async (e) => {
        e.preventDefault();
        setIsLoading(true);

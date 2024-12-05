@@ -1,7 +1,7 @@
 import { formatDateTime } from '../utils/dateUtils';
 import NearestDoctorsModal from './NearestDoctorsModal';
 import { useState } from 'react';
-import { fetchNearestDoctors } from '../services/adminAssignDoctor';
+import { fetchNearestDoctors } from '../services/adminLookingForNearestDoctor';
 
 export default function VisitRequestCard({ request, onAssignDoctor }) {
 
@@ -16,11 +16,11 @@ export default function VisitRequestCard({ request, onAssignDoctor }) {
             const doctors = await fetchNearestDoctors(request.id);
 
             console.log(doctors);
-            
+
             if (doctors) {
                 setNearestDoctors(doctors);
                 setShowDoctorsModal(true);
-            }
+            } 
         } catch (error) {
             console.error('Помилка при отриманні списку лікарів:', error);
         } finally {
@@ -29,10 +29,12 @@ export default function VisitRequestCard({ request, onAssignDoctor }) {
     };
 
     const handleSelectDoctor = (doctorId) => {
-        onAssignDoctor(request.id, doctorId);
+        console.log('ID лікаря:', doctorId, 'ID запиту:', request.id);
+        onAssignDoctor(doctorId, request.id); // Змінюємо порядок параметрів
         setShowDoctorsModal(false);
     };
 
+    
    return (
        <div className="request-card">
            <div className="card-header">

@@ -5,6 +5,8 @@ import { useAuth } from '../contexts/AuthContext';
 import VisitRequestCard from '../components/VisitRequestCard';
 import { fetchVisitRequests } from '../services/adminService';
 import '../styles/AdminDashboard.css';
+import { assignDoctorToVisit } from '../services/adminAssignDoctorToVisit';
+
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
@@ -27,8 +29,21 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleAssignDoctor = (requestId) => {
-        // Логіка призначення лікаря
+    const handleAssignDoctor = async (doctorId, visitId) => { // Змінили назви параметрів
+        setLoading(true);
+        setError(null);
+        
+        try {
+            console.log('Спроба призначити лікаря:', { doctorId, visitId });
+            const data = await assignDoctorToVisit(doctorId, visitId);
+            await handleFetchRequests();
+            alert('Лікаря успішно призначено');
+        } catch (err) {
+            setError('Помилка при призначенні лікаря');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

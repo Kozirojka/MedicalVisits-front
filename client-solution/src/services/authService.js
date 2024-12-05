@@ -15,9 +15,8 @@ export const authService = {
     }
 
     const data = await response.json();
-    // Зберігаємо токени та роль користувача
     this.setTokens(data.accessToken, data.refreshToken);
-    return this.parseJwt(data.accessToken); // Отримуємо дані з токена
+    return this.parseJwt(data.accessToken); 
   },
 
   async register(userData) {
@@ -37,7 +36,6 @@ export const authService = {
     return response.json();
   },
 
-  // Допоміжні методи
   setTokens(accessToken, refreshToken) {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
