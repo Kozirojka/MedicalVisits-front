@@ -20,9 +20,9 @@ export default function NearestDoctorsModal({ isOpen, onClose, doctors, onSelect
                     ))}
                 </div>
                 <button className="close-button" onClick={onClose}>
-                    Закрити
+                ✕
                 </button>
             </div>
         </div>
-    );
+    );  
 }
