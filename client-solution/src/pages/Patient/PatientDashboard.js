@@ -1,9 +1,7 @@
 // src/pages/PatientDashboard.jsx
 import { useState } from 'react';
-import CreateVisitModal from '../components/CreateVisitModal';
-import '../styles/PatientDashboard.css';
-
-
+import CreateVisitModal from '../../components/CreateVisitModal';
+import '../../styles/Patient/PatientDashboard.css';
 
 
 export default function PatientDashboard() {

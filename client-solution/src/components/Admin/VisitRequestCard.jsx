@@ -1,7 +1,7 @@
-import { formatDateTime } from '../utils/dateUtils';
+import { formatDateTime } from '../../utils/dateUtils';
 import NearestDoctorsModal from './NearestDoctorsModal';
 import { useState } from 'react';
-import { fetchNearestDoctors } from '../services/adminLookingForNearestDoctor';
+import { fetchNearestDoctors } from '../../services/Admin/adminLookingForNearestDoctor';
 
 export default function VisitRequestCard({ request, onAssignDoctor }) {
 
@@ -34,7 +34,7 @@ export default function VisitRequestCard({ request, onAssignDoctor }) {
         setShowDoctorsModal(false);
     };
 
-    
+
    return (
        <div className="request-card">
            <div className="card-header">

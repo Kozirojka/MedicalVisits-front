@@ -1,11 +1,11 @@
 // src/pages/AdminDashboard.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import VisitRequestCard from '../components/VisitRequestCard';
-import { fetchVisitRequests } from '../services/adminService';
-import '../styles/AdminDashboard.css';
-import { assignDoctorToVisit } from '../services/adminAssignDoctorToVisit';
+import { useAuth } from '../../contexts/AuthContext';
+import VisitRequestCard from '../../components/Admin/VisitRequestCard';
+import { fetchVisitRequests } from '../../services/Admin/adminService';
+import '../../styles/Admin/AdminDashboard.css';
+import { assignDoctorToVisit } from '../../services/Admin/adminAssignDoctorToVisit';
 
 
 export default function AdminDashboard() {

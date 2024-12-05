@@ -4,9 +4,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import DoctorDashboard from './pages/DoctorDashboard';
-import PatientDashboard from './pages/PatientDashboard';
-import AdminDashboard from './pages/AdminDashboard';
+import DoctorDashboard from './pages/Doctor/DoctorDashboard';
+import PatientDashboard from './pages/Patient/PatientDashboard';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 
 function App() {
   return (
