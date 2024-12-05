@@ -1,6 +1,38 @@
 import { formatDateTime } from '../utils/dateUtils';
+import NearestDoctorsModal from './NearestDoctorsModal';
+import { useState } from 'react';
+import { fetchNearestDoctors } from '../services/adminAssignDoctor';
 
 export default function VisitRequestCard({ request, onAssignDoctor }) {
+
+    const [showDoctorsModal, setShowDoctorsModal] = useState(false);
+    const [nearestDoctors, setNearestDoctors] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+
+    const handleAssignDoctorClick = async () => {
+        setLoading(true);
+        try {
+            const doctors = await fetchNearestDoctors(request.id);
+
+            console.log(doctors);
+            
+            if (doctors) {
+                setNearestDoctors(doctors);
+                setShowDoctorsModal(true);
+            }
+        } catch (error) {
+            console.error('Помилка при отриманні списку лікарів:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSelectDoctor = (doctorId) => {
+        onAssignDoctor(request.id, doctorId);
+        setShowDoctorsModal(false);
+    };
+
    return (
        <div className="request-card">
            <div className="card-header">
@@ -43,15 +75,23 @@ export default function VisitRequestCard({ request, onAssignDoctor }) {
                </div>
            </div>
 
-           <div className="card-footer">
-               <span className="status-badge">Очікує</span>
-               <button 
-                   className="assign-doctor-button"
-                   onClick={() => onAssignDoctor(request.id)}
-               >
-                   Призначити лікаря
-               </button>
-           </div>
+          <div className="card-footer">
+                <span className="status-badge">Очікує</span>
+                <button 
+                    className="assign-doctor-button"
+                    onClick={handleAssignDoctorClick}
+                    disabled={loading}
+                >
+                    {loading ? 'Завантаження...' : 'Призначити лікаря'}
+                </button>
+            </div>
+
+            <NearestDoctorsModal
+                isOpen={showDoctorsModal}
+                onClose={() => setShowDoctorsModal(false)}
+                doctors={nearestDoctors}
+                onSelectDoctor={handleSelectDoctor}
+            />
        </div>
    );
 }
