@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Додаємо useEffect
 import '../../styles/Doctor/DoctorDashboard.css';
+import { fetchVisitPendingRequests } from '../../services/Doctor/fetchPendingVisitRequests'; // Додаємо фігурні дужки
+import VisitRequestCard from '../../components/Doctor/VisitRequestPendingCard';
 
 export default function DoctorDashboard() {
     const [activeTab, setActiveTab] = useState('pending');
@@ -19,6 +21,34 @@ export default function DoctorDashboard() {
         };
         return labels[tab];
     };
+
+    useEffect(() => {
+      if (activeTab === 'pending') {
+          handleFetchPendingRequests();
+      }
+  }, [activeTab]); // Запускається кожного разу, коли змінюється activeTab
+
+
+    const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const handleFetchPendingRequests = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const data = await fetchVisitPendingRequests();
+
+            console.log(data);
+            setRequests(data);
+        } catch (err) {
+            setError('Помилка при отриманні даних');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     return (
         <div className="dashboard-container">
@@ -59,11 +89,21 @@ export default function DoctorDashboard() {
             </div>
 
             <div className="main-content">
-                {activeTab === 'pending' && (
-                    <div>
-                        <h2>Пацієнти, що очікують підтвердження</h2>
-                    </div>
-                )}
+                  {activeTab === 'pending' && (
+          <div>
+              <h2>Пацієнти, що очікують підтвердження</h2>
+              {loading && <div>Завантаження...</div>}
+              {error && <div className="error-message">{error}</div>}
+              <div className="requests-grid">
+                  {!loading && !error && requests.map(request => (
+                      <VisitRequestCard
+                          key={request.id}
+                          request={request}
+                      />
+                  ))}
+              </div>
+          </div>
+      )}
 
                 {activeTab === 'schedule' && (
                     <div>
