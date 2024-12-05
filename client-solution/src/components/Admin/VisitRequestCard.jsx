@@ -8,7 +8,7 @@ export default function VisitRequestCard({ request, onAssignDoctor }) {
     const [showDoctorsModal, setShowDoctorsModal] = useState(false);
     const [nearestDoctors, setNearestDoctors] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    
 
     const handleAssignDoctorClick = async () => {
         setLoading(true);
@@ -95,5 +95,7 @@ export default function VisitRequestCard({ request, onAssignDoctor }) {
                 onSelectDoctor={handleSelectDoctor}
             />
        </div>
+
+       
    );
 }

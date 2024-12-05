@@ -1,7 +1,8 @@
-// src/pages/Login.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import '../styles/Login/Login.css';
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -15,7 +16,6 @@ export default function Login() {
     try {
       const userData = await login(email, password);
       
-      // Перенаправлення в залежності від ролі
       switch (userData.role) {
         case 'Doctor':
           navigate('/doctor');
@@ -35,30 +35,36 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
-      <h2>Вхід в систему</h2>
+    <div className="loginContainer">
+    <div className="formWrapper">
+      <h2 className="title">Вхід в систему</h2>
       {error && <div className="error">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
+      <form onSubmit={handleSubmit} className="form">
+        <div className="inputGroup">
+          <label htmlFor="email" className="label">Email</label>
           <input
+            id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="input"
           />
         </div>
-        <div>
-          <label>Пароль:</label>
+        <div className="inputGroup">
+          <label htmlFor="password" className="label">Пароль</label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="input"
           />
         </div>
-        <button type="submit">Увійти</button>
+        <button type="submit" className="submitButton">Увійти</button>
       </form>
     </div>
-  );
+  </div>
+  )  
 }

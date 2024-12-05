@@ -1,0 +1,64 @@
+/* Основний стиль для бічної панелі */
+.time-picker-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%; /* Половина ширини екрана */
+    height: 100%;
+    background-color: #ffffff;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Контент всередині бічної панелі */
+.sidebar-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.sidebar-content p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Кнопка закриття */
+.close-sidebar-button {
+    align-self: flex-end;
+    background-color: #f44336;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.close-sidebar-button:hover {
+    background-color: #d32f2f;
+}
+
+/* Кнопка "Вибрати час" */
+.time-picker-button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #1976d2;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.time-picker-button:hover {
+    background-color: #1565c0;
+}

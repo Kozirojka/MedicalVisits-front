@@ -1,5 +1,7 @@
 import { formatDateTime } from '../../utils/dateUtils';
 import { useState } from 'react';
+import '../../styles/Doctor/styleForPendingCard.css';
+
 
 export default function VisitRequestCard({ request }) {
 
@@ -7,6 +9,7 @@ export default function VisitRequestCard({ request }) {
     const [nearestDoctors, setNearestDoctors] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    
 
    return (
        <div className="request-card">
@@ -51,6 +54,8 @@ export default function VisitRequestCard({ request }) {
                </div>
            </div>
 
+        
+
        </div>
    );
-}
+}   
