@@ -10,6 +10,6 @@ export const fetchVisitRequests = async () => {
     if (!response.ok) {
         throw new Error('Failed to fetch requests');
     }
-
+ 
     return response.json();
 };

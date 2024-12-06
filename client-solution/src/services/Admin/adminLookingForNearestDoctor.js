@@ -13,7 +13,7 @@ export async function fetchNearestDoctors(requestId) {
                 "Content-Type": "application/json"
             }
         });
-
+ 
         if (response.ok) {
             const data = await response.json();
             return data;
