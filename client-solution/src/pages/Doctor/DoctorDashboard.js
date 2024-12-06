@@ -96,14 +96,16 @@ export default function DoctorDashboard() {
               {error && <div className="error-message">{error}</div>}
               <div className="requests-grid">
                     
-                  {!loading && !error && requests.map(request => (
-
-        
-                      <VisitRequestCard
-                          key={request.id}
-                          request={request}
-                      />
-                  ))}
+              {!loading && !error && requests.map(request => {
+                
+                console.warn('Request without ID:', request);
+                return ( 
+                    <VisitRequestCard
+                        key={request.id}
+                        request={request}
+                    />
+                     );
+                })}
               </div>
           </div>
       )}

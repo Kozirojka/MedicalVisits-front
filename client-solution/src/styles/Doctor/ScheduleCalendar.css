@@ -1,0 +1,24 @@
+/* styles/Doctor/ScheduleCalendar.css */
+.calendar-modal {
+    width: 90%;
+    max-width: 1200px;
+    height: 80vh;
+    overflow-y: auto;
+}
+
+.hour-slot {
+    height: 60px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.hour-slot.Available:hover {
+    background-color: #e3f2fd;
+}
+
+.hour-slot.Booked {
+    background-color: #ffebee;
+    cursor: not-allowed;
+}
+
+/* ... інші стилі з вашого HTML-прикладу ... */
