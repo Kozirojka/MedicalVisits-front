@@ -38,7 +38,7 @@ export default function DoctorDashboard() {
         setError(null);
         try {
             const data = await fetchVisitPendingRequests();
-
+            
             console.log(data);
             setRequests(data);
         } catch (err) {
@@ -95,7 +95,10 @@ export default function DoctorDashboard() {
               {loading && <div>Завантаження...</div>}
               {error && <div className="error-message">{error}</div>}
               <div className="requests-grid">
+                    
                   {!loading && !error && requests.map(request => (
+
+        
                       <VisitRequestCard
                           key={request.id}
                           request={request}
