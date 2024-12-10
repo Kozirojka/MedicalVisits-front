@@ -2,10 +2,18 @@
 import { useState } from 'react';
 import CreateVisitModal from '../../components/CreateVisitModal';
 import '../../styles/Patient/PatientDashboard.css';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function PatientDashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const navigate = useNavigate();
+
+
+    const handleChatOpen = () => {
+        navigate('/chat-app');
+    };
 
 
     return (
@@ -24,6 +32,9 @@ export default function PatientDashboard() {
                     >
                          Create visit request
                     </button>
+
+
+                    <button onClick={handleChatOpen}>Open Chat</button>
 
                     <CreateVisitModal 
                         isOpen={isModalOpen}

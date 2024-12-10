@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import PatientDashboard from './pages/Patient/PatientDashboard';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import ChatApp from './pages/Chat/ChatApp'
 
 function App() {
   return (
@@ -15,7 +16,20 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
+
+
+
+          <Route
+            path="/chat-app/*"
+            element={
+              <ProtectedRoute allowedRoles={['Doctor', 'Patient', 'Admin']}>
+                <ChatApp />
+              </ProtectedRoute>
+            }
+          />
+
+
+
           <Route
             path="/doctor"
             element={
@@ -26,7 +40,7 @@ function App() {
           />
           
           <Route
-            path="/patient"
+            path="/patient/*"
             element={
               <ProtectedRoute allowedRoles={['Patient']}>
                 <PatientDashboard />
