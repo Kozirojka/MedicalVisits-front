@@ -7,6 +7,7 @@ export default function ChatApp() {
 
     const [connection, setConnection] = useState(null);
     const [count, setCount] = useState(0);
+    const [userCount, setUserCount] = useState(0);
 
     useEffect(() =>{
 
@@ -18,14 +19,21 @@ export default function ChatApp() {
         .withAutomaticReconnect()  
         .build();  
 
-
+        //функція яка потрібна для того, щоб при моєму підключенню на сервер слалось помиланн, що
+        //потрібно використати метод NewWindowLoaded та інкрементувати на одни
         function newWindowLoadClient() {
             newConnection.invoke("NewWindowLoaded")
                 .catch(error => console.error("Error invoking NewWindowLoaded:", error));
         }
         
+
+        //може прийняти повідомлення від сервера
         newConnection.on("updateTotalViews", (value) => {
             setCount(value);
+        });
+
+        newConnection.on("updateTotalUsers", (value) => {
+            setUserCount(value);
         });
         
         newConnection.start()
@@ -70,6 +78,7 @@ export default function ChatApp() {
             <div className='container'>
                 <div className="row">
                     <p>Total view {count}</p>
+                    <p>Total users {userCount}</p>
                 </div>
             </div>
         </div>
