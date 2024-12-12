@@ -60,7 +60,8 @@ export default function ChatTab() {
                             className={`chat-list-item ${selectedChat?.id === chat.id ? "active" : ""}`}
                             onClick={() => setSelectedChat(chat)}
                         >
-                            {chat.name}
+                            <span className="chat-name">{chat.name}</span>
+                            <span className="chat-preview">{chat.preview || "No messages yet"}</span>
                         </li>
                     ))}
                 </ul>
@@ -68,7 +69,10 @@ export default function ChatTab() {
 
             <main className="chat-main">
                 {selectedChat ? (
-                    <div>Відкрито чат: {selectedChat.name}</div>
+                    <div className="chat-content">
+                        <h2>{selectedChat.name}</h2>
+                        <div className="chat-messages">Chat content goes here...</div>
+                    </div>
                 ) : (
                     <div className="chat-placeholder">
                         Виберіть чат зі списку або створіть новий.

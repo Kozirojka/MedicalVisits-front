@@ -2,30 +2,38 @@
     display: flex;
     height: 100%;
     background: #f5f5f5;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .chat-sidebar {
-    width: 250px;
-    background: #007bff;
-    color: white;
+    width: 300px;
+    background: #a8d5ba; 
+    color: #333;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
 }
 
 .create-chat-button {
-    background: white;
-    color: #007bff;
+    background: #007bff;
+    color: white;
     border: none;
-    border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 10px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
     cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s, transform 0.2s;
 }
 
 .create-chat-button:hover {
     background: #0056b3;
-    color: white;
+    transform: scale(1.05);
 }
 
 .chat-list {
@@ -34,20 +42,37 @@
     margin: 0;
     overflow-y: auto;
     flex: 1;
+    max-height: calc(100% - 60px);
 }
 
 .chat-list-item {
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    background: white;
+    color: #333;
     cursor: pointer;
-    transition: background 0.3s;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .chat-list-item:hover,
 .chat-list-item.active {
-    background: white;
-    color: #007bff;
+    background: #007bff;
+    color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chat-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chat-preview {
+    font-size: 0.9em;
+    color: #555;
 }
 
 .chat-main {
@@ -55,6 +80,9 @@
     padding: 20px;
     background: white;
     border-left: 1px solid #ddd;
+    border-radius: 15px;
+    margin: 10px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .chat-placeholder {
