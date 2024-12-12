@@ -10,12 +10,6 @@ export default function PatientDashboard() {
 
     const navigate = useNavigate();
 
-
-    const handleChatOpen = () => {
-        navigate('/chat-app');
-    };
-
-
     return (
         <div className="patient-dashboard">
             <header className="dashboard-header">
@@ -33,8 +27,6 @@ export default function PatientDashboard() {
                          Create visit request
                     </button>
 
-
-                    <button onClick={handleChatOpen}>Open Chat</button>
 
                     <CreateVisitModal 
                         isOpen={isModalOpen}

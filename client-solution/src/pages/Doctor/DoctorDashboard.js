@@ -2,22 +2,29 @@ import { useState, useEffect } from 'react'; // Додаємо useEffect
 import '../../styles/Doctor/DoctorDashboard.css';
 import { fetchVisitPendingRequests } from '../../services/Doctor/fetchPendingVisitRequests'; // Додаємо фігурні дужки
 import VisitRequestCard from '../../components/Doctor/VisitRequestPendingCard';
+import { useNavigate } from 'react-router-dom';
+import ChatTab from "../../components/Doctor/ChatTab";
+
+
 
 export default function DoctorDashboard() {
     const [activeTab, setActiveTab] = useState('pending');
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const navigate = useNavigate();
 
     const tabIcons = {
         pending: '👥',
         schedule: '📅',
         patients: '📋',
+        chat: '💬'
     };
 
     const getTabLabel = (tab) => {
         const labels = {
             pending: 'Очікують',
             schedule: 'Розклад',
-            patients: 'Пацієнти'
+            patients: 'Пацієнти',
+            chat: 'Чат'
         };
         return labels[tab];
     };
@@ -47,6 +54,10 @@ export default function DoctorDashboard() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleChatOpen = () => {
+        navigate('/chat-app');
     };
 
 
@@ -89,6 +100,7 @@ export default function DoctorDashboard() {
             </div>
 
             <div className="main-content">
+                
                   {activeTab === 'pending' && (
           <div>
               <h2>Пацієнти, що очікують підтвердження</h2>
@@ -121,6 +133,9 @@ export default function DoctorDashboard() {
                         <h2>Інформація про пацієнтів</h2>
                     </div>
                 )}
+
+                {activeTab === "chat" && <ChatTab />}
+
             </div>
         </div>
     );
