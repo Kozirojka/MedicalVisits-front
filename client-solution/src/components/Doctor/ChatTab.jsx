@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import "../../styles/ChatStyles/ChatTab.css";
 import CreateChatModal from '../Chat/CreateChatModal';
+import { useEffect } from "react";
 
 export default function ChatTab() {
     const [chats, setChats] = useState([]);
@@ -15,6 +16,36 @@ export default function ChatTab() {
     const handleCloseModal = () => {
         setShowModal(false);
     };
+
+     useEffect(() => {
+        const fetchChats = async () => {
+            try {
+                const token = localStorage.getItem('accessToken');
+                const response = await fetch("http://localhost:5268/api/Chat/chats", {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                console.log(data);
+
+
+                setChats(data); 
+            } catch (error) {
+                console.error("Помилка завантаження чатів:", error);
+            }
+        };
+
+        fetchChats();
+    }, []); 
+
 
     return (
         <div className="chat-tab-container">
