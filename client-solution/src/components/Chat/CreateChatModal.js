@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Card } from 'react-bootstrap';
 
-const CreateChatModal = ({ onClose }) => {
+const CreateChatModal = ({ onClose, onChatCreated }) => {
   const [chatName, setChatName] = useState('');
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -33,6 +33,7 @@ const CreateChatModal = ({ onClose }) => {
       return response.json();
     }).then((data) =>{
       console.log("succesfully created chat");
+      onChatCreated();
     }) 
 
     onClose(); 

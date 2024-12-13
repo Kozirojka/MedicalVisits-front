@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 
 
-export function ChatApp({ roomId, currentUser }) {
+export function ChatApp({ roomId, currentUser, clear = [] }) {
     const [connection, setConnection] = useState(null);
     const [currentText, setCurrentText] = useState("");
     const [messages, setMessages] = useState([]);
@@ -33,7 +33,13 @@ export function ChatApp({ roomId, currentUser }) {
         setCurrentText(e.target.value);
     };
 
+    const handleClearChut = () => {
+        setMessages(clear);
+
+    }
     useEffect(() => {
+        
+        handleClearChut();
 
         console.log(roomId, currentUser);
 
@@ -51,6 +57,7 @@ export function ChatApp({ roomId, currentUser }) {
             .start()
             .then(() => {
                 console.log("Successfully connected to SignalR hub");
+
                 setConnection(newConnection);
 
                 newConnection.invoke("JoinGroup", roomId)

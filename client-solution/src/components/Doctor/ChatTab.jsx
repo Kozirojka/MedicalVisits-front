@@ -18,32 +18,32 @@ export default function ChatTab() {
         setShowModal(false);
     };
 
-     useEffect(() => {
-        const fetchChats = async () => {
-            try {
-                const token = localStorage.getItem('accessToken');
-                const response = await fetch("http://localhost:5268/api/Chat/chats", {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                console.log(data);
-
-
-                setChats(data); 
-            } catch (error) {
-                console.error("Помилка завантаження чатів:", error);
+    const fetchChats = async () => {
+        try {
+            const token = localStorage.getItem('accessToken');
+            const response = await fetch("http://localhost:5268/api/Chat/chats", {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        };
+    
+            const data = await response.json();
+            console.log(data);
+    
+            setChats(data); 
+        } catch (error) {
+            console.error("Помилка завантаження чатів:", error);
+        }
+    };
 
+
+     useEffect(() => {
+    
         fetchChats();
     }, []); 
 
@@ -90,7 +90,7 @@ export default function ChatTab() {
             </main>
 
             {showModal && (
-                <CreateChatModal onClose={handleCloseModal} />
+                <CreateChatModal onClose={handleCloseModal} onChatCreated={fetchChats}/>
             )}
         </div>
     );
