@@ -3,6 +3,9 @@
 import * as signalR from "@microsoft/signalr";
 import { useEffect, useState } from "react";
 import "../../styles/ChatStyles/Chat.css";
+import Button from '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
+
 
 export function ChatApp({ roomId, currentUser }) {
     const [connection, setConnection] = useState(null);
@@ -12,11 +15,12 @@ export function ChatApp({ roomId, currentUser }) {
     const sendMessage = (text) => {
         if (connection) {
             connection
-                .send("SendMessage", roomId, text, currentUser.name)
-                .then(() => console.log("Message sent successfully: ", text))
-                .catch((error) => console.error("Error while sending message: ", error));
+                .invoke("SendMessageToGroup", roomId, text)
+                .catch((err) => console.error("Send Error: ", err));
         }
     };
+
+
 
     const handleSendMessage = () => {
         if (currentText.trim() !== "") {
@@ -30,6 +34,10 @@ export function ChatApp({ roomId, currentUser }) {
     };
 
     useEffect(() => {
+
+        console.log(roomId, currentUser);
+
+        
         const newConnection = new signalR.HubConnectionBuilder()
             .withUrl("http://localhost:5268/ChatHub", {
                 accessTokenFactory: () => currentUser.token,
@@ -37,11 +45,16 @@ export function ChatApp({ roomId, currentUser }) {
             .withAutomaticReconnect()
             .build();
 
+
+
         newConnection
             .start()
             .then(() => {
                 console.log("Successfully connected to SignalR hub");
                 setConnection(newConnection);
+
+                newConnection.invoke("JoinGroup", roomId)
+
 
                 newConnection.on("ReceiveMessage", (user, message) => {
                     setMessages((prevMessages) => [...prevMessages, { user, message }]);
@@ -60,6 +73,7 @@ export function ChatApp({ roomId, currentUser }) {
             }
         };
     }, [currentUser.token, roomId]);
+
 
     return (
         <div className="chat-container">
@@ -83,9 +97,9 @@ export function ChatApp({ roomId, currentUser }) {
                     placeholder="Напишіть повідомлення..."
                     className="message-input"
                 />
-                <button className="send-button" onClick={handleSendMessage}>
-                    Відправити
-                </button>
+                <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendMessage}>
+                    Send
+                </Button>
             </div>
         </div>
     );
