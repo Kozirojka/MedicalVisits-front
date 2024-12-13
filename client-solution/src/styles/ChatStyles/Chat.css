@@ -1,14 +1,13 @@
 .chat-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
 }
 
 .chat-messages {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
-    background-color: #f9f9f9;
+    
 }
 
 .chat-input {
@@ -17,7 +16,7 @@
     padding: 10px;
     border-top: 1px solid #ccc;
     background-color: #fff;
-}
+  }
 
 .message-input {
     flex: 1;
@@ -40,4 +39,9 @@
 
 .send-button:hover {
     background-color: #0056b3;
+}
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
 }

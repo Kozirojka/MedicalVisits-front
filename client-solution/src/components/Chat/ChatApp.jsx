@@ -4,7 +4,7 @@ import * as signalR from "@microsoft/signalr";
 import { useEffect, useState } from "react";
 import "../../styles/ChatStyles/Chat.css";
 
-export default function ChatApp({ roomId, currentUser }) {
+export function ChatApp({ roomId, currentUser }) {
     const [connection, setConnection] = useState(null);
     const [currentText, setCurrentText] = useState("");
     const [messages, setMessages] = useState([]);
@@ -64,8 +64,7 @@ export default function ChatApp({ roomId, currentUser }) {
     return (
         <div className="chat-container">
             <div className="chat-header">
-                <h2>Чат: {roomId}</h2>
-                <p>Ви спілкуєтесь як {currentUser.name}</p>
+               {/* <h2>Чат: {roomId}</h2> */}
             </div>
             <div className="chat-messages">
                 <ul className="message-list">

@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/ChatStyles/ChatTab.css";
 import CreateChatModal from '../Chat/CreateChatModal';
 import { useEffect } from "react";
+import { ChatApp } from '../../components/Chat/ChatApp'
 
 export default function ChatTab() {
     const [chats, setChats] = useState([]);
@@ -70,8 +71,16 @@ export default function ChatTab() {
             <main className="chat-main">
                 {selectedChat ? (
                     <div className="chat-content">
+                               
                         <h2>{selectedChat.name}</h2>
-                        <div className="chat-messages">Chat content goes here...</div>
+                        <ChatApp
+                            roomId={selectedChat.id}
+                            currentUser={{
+                                name: selectedChat.name,
+                                token: localStorage.getItem('accessToken')
+                            }}
+                            />
+
                     </div>
                 ) : (
                     <div className="chat-placeholder">
