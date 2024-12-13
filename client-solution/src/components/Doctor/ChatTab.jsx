@@ -4,6 +4,8 @@ import "../../styles/ChatStyles/ChatTab.css";
 import CreateChatModal from '../Chat/CreateChatModal';
 import { useEffect } from "react";
 import { ChatApp } from '../../components/Chat/ChatApp'
+import { ChatItem } from '../Chat/ChatItem'
+
 
 export default function ChatTab() {
     const [chats, setChats] = useState([]);
@@ -55,16 +57,20 @@ export default function ChatTab() {
                     Створити чат
                 </button>
                 <ul className="chat-list">
+                    
+                    {/* У цей код потрібно було добавити знак 
+                    запитання, адже при рендерингу значення selectChat з самого початку == null*/}
                     {chats.map((chat) => (
-                        <li
+                        <ChatItem
                             key={chat.id}
-                            className={`chat-list-item ${selectedChat?.id === chat.id ? "active" : ""}`}
-                            onClick={() => setSelectedChat(chat)}
-                        >
-                            <span className="chat-name">{chat.name}</span>
-                            <span className="chat-preview">{chat.preview || "No messages yet"}</span>
-                        </li>
+                            chatId = {chat.id}
+                            onClick = {() => setSelectedChat(chat)}
+                            selectedId={selectedChat?.id}
+                            chatName = {chat.name}
+                            chatPreview = {chat.preview}
+                        />
                     ))}
+
                 </ul>
             </aside>
 

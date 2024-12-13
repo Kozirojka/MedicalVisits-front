@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import "../../styles/ChatStyles/Chat.css";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
-
+import ChatIcon from '@mui/icons-material/Chat';
 
 export function ChatApp({ roomId, currentUser, clear = [] }) {
     const [connection, setConnection] = useState(null);
@@ -107,7 +107,10 @@ export function ChatApp({ roomId, currentUser, clear = [] }) {
                 <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendMessage}>
                     Send
                 </Button>
+
             </div>
+
+            
         </div>
     );
 }

@@ -33,7 +33,7 @@ const CreateChatModal = ({ onClose, onChatCreated }) => {
       return response.json();
     }).then((data) =>{
       console.log("succesfully created chat");
-      onChatCreated();
+       onChatCreated();
     }) 
 
     onClose(); 
