@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'; // Додаємо useEffect
 import '../../styles/Doctor/DoctorDashboard.css';
 import { fetchVisitPendingRequests } from '../../services/Doctor/fetchPendingVisitRequests'; // Додаємо фігурні дужки
 import VisitRequestCard from '../../components/Doctor/VisitRequestPendingCard';
+import { useNavigate } from 'react-router-dom';
+import ChatTab from "../../components/Doctor/ChatTab";
+
+
 
 export default function DoctorDashboard() {
     const [activeTab, setActiveTab] = useState('pending');
@@ -11,13 +15,15 @@ export default function DoctorDashboard() {
         pending: '👥',
         schedule: '📅',
         patients: '📋',
+        chat: '💬'
     };
 
     const getTabLabel = (tab) => {
         const labels = {
             pending: 'Очікують',
             schedule: 'Розклад',
-            patients: 'Пацієнти'
+            patients: 'Пацієнти',
+            chat: 'Чат'
         };
         return labels[tab];
     };
@@ -26,7 +32,7 @@ export default function DoctorDashboard() {
       if (activeTab === 'pending') {
           handleFetchPendingRequests();
       }
-  }, [activeTab]); // Запускається кожного разу, коли змінюється activeTab
+  }, [activeTab]); 
 
 
     const [requests, setRequests] = useState([]);
@@ -49,6 +55,7 @@ export default function DoctorDashboard() {
         }
     };
 
+    
 
     return (
         <div className="dashboard-container">
@@ -89,6 +96,7 @@ export default function DoctorDashboard() {
             </div>
 
             <div className="main-content">
+                
                   {activeTab === 'pending' && (
           <div>
               <h2>Пацієнти, що очікують підтвердження</h2>
@@ -96,14 +104,16 @@ export default function DoctorDashboard() {
               {error && <div className="error-message">{error}</div>}
               <div className="requests-grid">
                     
-                  {!loading && !error && requests.map(request => (
-
-        
-                      <VisitRequestCard
-                          key={request.id}
-                          request={request}
-                      />
-                  ))}
+              {!loading && !error && requests.map(request => {
+                
+                console.warn('Request without ID:', request);
+                return ( 
+                    <VisitRequestCard
+                        key={request.id}
+                        request={request}
+                    />
+                     );
+                })}
               </div>
           </div>
       )}
@@ -119,6 +129,9 @@ export default function DoctorDashboard() {
                         <h2>Інформація про пацієнтів</h2>
                     </div>
                 )}
+
+                {activeTab === "chat" && <ChatTab />}
+
             </div>
         </div>
     );

@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import CreateVisitModal from '../../components/CreateVisitModal';
 import '../../styles/Patient/PatientDashboard.css';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function PatientDashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const navigate = useNavigate();
 
     return (
         <div className="patient-dashboard">
@@ -24,6 +26,7 @@ export default function PatientDashboard() {
                     >
                          Create visit request
                     </button>
+
 
                     <CreateVisitModal 
                         isOpen={isModalOpen}

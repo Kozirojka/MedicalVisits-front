@@ -1,0 +1,116 @@
+.chat-tab-container {
+    display: flex;
+    height: 100%;
+    background: #f5f5f5;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.chat-sidebar {
+    width: 300px;
+    background: #a8d5ba; 
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+.create-chat-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s, transform 0.2s;
+}
+
+.create-chat-button:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(100% - 60px);
+
+    scrollbar-width: thin; 
+    scrollbar-color: #22a966b6 #f5f5f5;
+}
+
+.chat-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-list::-webkit-scrollbar-track {
+    background: #f5f5f5; 
+    border-radius: 10px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+    background-color: #007bff; 
+    border-radius: 10px;
+    border: 2px solid #f5f5f5;
+    
+}
+
+.chat-list::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3; 
+}
+
+.chat-list-item {
+    padding: 15px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-list-item:hover,
+.chat-list-item.active {
+    background: #007bff;
+    color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chat-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chat-preview {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.chat-main {
+    flex: 1;
+    padding: 20px;
+    background: white;
+    border-left: 1px solid #ddd;
+    border-radius: 15px;
+    margin: 10px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-placeholder {
+    text-align: center;
+    color: gray;
+    font-size: 18px;
+    margin-top: 50px;
+}

@@ -1,15 +1,48 @@
 import { formatDateTime } from '../../utils/dateUtils';
 import { useState } from 'react';
 import '../../styles/Doctor/styleForPendingCard.css';
+import ScheduleCalendar from './ScheduleCalendar';
+import '../../styles/Doctor/ScheduleCalendar.css'
 
 
 export default function VisitRequestCard({ request }) {
 
     const [showDoctorsModal, setShowDoctorsModal] = useState(false);
     const [nearestDoctors, setNearestDoctors] = useState([]);
+
+    const [showCalendarModal, setShowCalendarModal] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    
+    const handleTimeSelect = async (timeSlotId) => {
+        try {
+            setLoading(true);
+            const token = localStorage.getItem('accessToken');
+            
+            console.log("Нагаємось відіслати вже в handleTimeSelect" + timeSlotId
+                + "send id of visit " + request.id
+            );
+
+            const response = await fetch(`http://localhost:5268/api/Doctor/assign-visit`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    timeSlotId: timeSlotId,
+                    VisitRequestId: request.id
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to assign time');
+            
+            setShowCalendarModal(false);
+        } catch (error) {
+            console.error('Error assigning time:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
    return (
        <div className="request-card">
@@ -52,8 +85,28 @@ export default function VisitRequestCard({ request }) {
                            : 'Не вказано'}
                    </span>
                </div>
-           </div>
 
+               <button 
+                    className="set-time-button"
+                    onClick={() => setShowCalendarModal(true)}
+                >
+                    Встановити час
+                </button>
+           </div>
+                        
+           {showCalendarModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content calendar-modal">
+                        <button 
+                            className="close-button"
+                            onClick={() => setShowCalendarModal(false)}
+                        >
+                            ✕
+                        </button>
+                        <ScheduleCalendar onTimeSelect={handleTimeSelect} />
+                    </div>
+                </div>
+            )}
         
 
        </div>

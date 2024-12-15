@@ -15,7 +15,12 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
+
+
+
+      
+
+
           <Route
             path="/doctor"
             element={
@@ -26,7 +31,7 @@ function App() {
           />
           
           <Route
-            path="/patient"
+            path="/patient/*"
             element={
               <ProtectedRoute allowedRoles={['Patient']}>
                 <PatientDashboard />
