@@ -10,7 +10,6 @@ import ChatTab from "../../components/Doctor/ChatTab";
 export default function DoctorDashboard() {
     const [activeTab, setActiveTab] = useState('pending');
     const [showUserMenu, setShowUserMenu] = useState(false);
-    const navigate = useNavigate();
 
     const tabIcons = {
         pending: '👥',
@@ -33,7 +32,7 @@ export default function DoctorDashboard() {
       if (activeTab === 'pending') {
           handleFetchPendingRequests();
       }
-  }, [activeTab]); // Запускається кожного разу, коли змінюється activeTab
+  }, [activeTab]); 
 
 
     const [requests, setRequests] = useState([]);
@@ -56,10 +55,7 @@ export default function DoctorDashboard() {
         }
     };
 
-    const handleChatOpen = () => {
-        navigate('/chat-app');
-    };
-
+    
 
     return (
         <div className="dashboard-container">

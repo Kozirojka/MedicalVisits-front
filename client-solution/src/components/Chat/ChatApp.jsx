@@ -13,6 +13,7 @@ export function ChatApp({ roomId, currentUser, clear = [] }) {
     const [messages, setMessages] = useState([]);
 
     const sendMessage = (text) => {
+        
         if (connection) {
             connection
                 .invoke("SendMessageToGroup", roomId, text)
@@ -37,12 +38,60 @@ export function ChatApp({ roomId, currentUser, clear = [] }) {
         setMessages(clear);
 
     }
+
+    const handleSetHistory = async (chatId) => {
+        const newMessages = await fetchMessages(chatId);
+    
+        if (newMessages && Array.isArray(newMessages)) {
+            const transformedMessages = newMessages.map((msg) => ({
+                user: msg.senderId,
+                message: msg.messageText,
+            }));
+    
+            setMessages((prevMessages) => [...prevMessages, ...transformedMessages]);
+        } else {
+            console.error("Failed to update messages: newMessages is not an array");
+        }
+    };
+
+    const fetchMessages = async (chatId) => {
+
+
+        const token = localStorage.getItem('accessToken');
+
+
+        const response = await fetch(`http://localhost:5268/api/Chat/${chatId}/history`,
+        {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+
+        console.log(response);
+
+
+        if (!response.ok) {
+            console.error(`Error fetching messages: ${response.status} ${response.statusText}`);
+            return null;
+        }
+    
+        const messages = await response.json();
+
+        console.log(messages);
+
+        return messages;
+    
+    }
+
     useEffect(() => {
         
         handleClearChut();
 
         console.log(roomId, currentUser);
 
+        handleSetHistory(roomId);
         
         const newConnection = new signalR.HubConnectionBuilder()
             .withUrl("http://localhost:5268/ChatHub", {
@@ -79,7 +128,7 @@ export function ChatApp({ roomId, currentUser, clear = [] }) {
                     .catch((error) => console.error("Error stopping connection: ", error));
             }
         };
-    }, [currentUser.token, roomId]);
+    }, [currentUser.token, roomId], [roomId]);
 
 
     return (
