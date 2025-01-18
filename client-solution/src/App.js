@@ -20,7 +20,6 @@ function App() {
 
       
 
-
           <Route
             path="/doctor"
             element={
