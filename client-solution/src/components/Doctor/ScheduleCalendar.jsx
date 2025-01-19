@@ -1,5 +1,5 @@
 // components/Doctor/ScheduleCalendar.jsx
-import { useState, useEffect } from 'react';
+import VerticalCalendar from '../Calendar/VerticalCalendar';
 
 export default function ScheduleCalendar({ onTimeSelect }) {
    
@@ -7,7 +7,8 @@ export default function ScheduleCalendar({ onTimeSelect }) {
     
     return (
         <>
-            <p>hello</p>
+            <p>Calendar</p>
+            <VerticalCalendar/>
         </>
     );
 }
