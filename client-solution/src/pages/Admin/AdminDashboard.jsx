@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/Admin/AdminDashboard.css';
 import RequestsTab from '../../components/Admin/featureTabs/RequestsTab';
 import Sidebar from '../../components/Shared/Sidebar';
 
 export default function AdminDashboard() {
-    const navigate = useNavigate();
     const { logout } = useAuth();
     const [activeTab, setActiveTab] = useState('requests');
 
