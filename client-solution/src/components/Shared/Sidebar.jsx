@@ -2,7 +2,7 @@
 
 import '../../components/Shared/Sidebar.jsx';
 
-export default function Sidebar({ tabsConfig, activeTab, setActiveTab, onLogout }) {
+const Sidebar = ({ tabsConfig, activeTab, setActiveTab, onLogout }) => {
   return (
     <div className="sidebar">
       <div className="tabs-container">
@@ -27,3 +27,6 @@ export default function Sidebar({ tabsConfig, activeTab, setActiveTab, onLogout 
     </div>
   );
 }
+
+
+export default Sidebar;

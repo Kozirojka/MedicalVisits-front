@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import "../../styles/ChatStyles/Chat.css";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
-import ChatIcon from '@mui/icons-material/Chat';
 
 export function ChatApp({ roomId, currentUser, clear = [] }) {
     const [connection, setConnection] = useState(null);
@@ -134,7 +133,6 @@ export function ChatApp({ roomId, currentUser, clear = [] }) {
     return (
         <div className="chat-container">
             <div className="chat-header">
-               {/* <h2>Чат: {roomId}</h2> */}
             </div>
             <div className="chat-messages">
                 <ul className="message-list">
