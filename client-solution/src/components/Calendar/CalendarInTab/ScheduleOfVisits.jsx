@@ -8,6 +8,9 @@ import DialogActions from '@mui/material/DialogActions';
 
 const dayLabels = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
 
+
+{/* це компонента яка буде у вкладці Schedule*/}
+
 function getStartOfWeek(date) {
   const d = new Date(date);
   const day = d.getDay();
@@ -81,11 +84,11 @@ function ScheduleOfVisits() {
     const newStart = new Date(currentWeekStart);
     newStart.setDate(newStart.getDate() + offset * 7);
     setCurrentWeekStart(getStartOfWeek(newStart));
-    setEvents([]); // Очищення подій при зміні тижня
+    setEvents([]); 
   };
 
-  const handleOpenModal = (dayObj) => {
-    setSelectedDay(dayObj);
+  const handleOpenModal = (dayObj, dayIndex) => {
+    setSelectedDay({ ...dayObj, dIndex: dayIndex });
     setModalOpen(true);
   };
 
@@ -104,46 +107,53 @@ function ScheduleOfVisits() {
         <Button variant="outlined" onClick={() => changeWeek(1)}>Наступний тиждень</Button>
       </div>
       <div className="calendar-grid">
-        {weekDays.map((dayObj, d) => (
-          <div key={dayObj.label} className="day-column">
-            <div 
-              className="day-header"
-              onClick={() => handleOpenModal(dayObj)}
-              style={{ cursor: 'pointer' }}
-            >
-              {dayObj.label} {dayObj.date.getDate()}
+        <div className="hour-column">
+          {Array.from({ length: 24 }, (_, h) => (
+            <div key={h} className="hour-label">{h}:00</div>
+          ))}
+        </div>
+        <div className="days-columns">
+          {weekDays.map((dayObj, d) => (
+            <div key={dayObj.label} className="day-column">
+              <div 
+                className="day-header"
+                onClick={() => handleOpenModal(dayObj, d)}
+                style={{ cursor: 'pointer' }}
+              >
+                {dayObj.label} {dayObj.date.getDate()}
+              </div>
+              {Array.from({ length: 24 }, (_, h) => {
+                const isSelected = selectionRange.some(
+                  cell => cell.d === d && cell.h === h
+                );
+                return (
+                  <div
+                    key={h}
+                    className={`time-slot ${isSelected ? 'selected' : ''}`}
+                    onMouseDown={() => onMouseDownCell(d, h)}
+                    onMouseEnter={() => onMouseEnterCell(d, h)}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => onDropCell(e, d, h)}
+                  >
+                    {events
+                      .filter(ev => ev.d === d && ev.start <= h && ev.end > h)
+                      .map(ev => (
+                        <div
+                          key={ev.id}
+                          draggable
+                          onDragStart={(e) => onDragStart(e, ev)}
+                          className="event"
+                        >
+                          Подія {ev.id}
+                        </div>
+                      ))
+                    }
+                  </div>
+                );
+              })}
             </div>
-            {Array.from({ length: 24 }, (_, h) => {
-              const isSelected = selectionRange.some(
-                cell => cell.d === d && cell.h === h
-              );
-              return (
-                <div
-                  key={h}
-                  className={`time-slot ${isSelected ? 'selected' : ''}`}
-                  onMouseDown={() => onMouseDownCell(d, h)}
-                  onMouseEnter={() => onMouseEnterCell(d, h)}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => onDropCell(e, d, h)}
-                >
-                  {events
-                    .filter(ev => ev.d === d && ev.start <= h && ev.end > h)
-                    .map(ev => (
-                      <div
-                        key={ev.id}
-                        draggable
-                        onDragStart={(e) => onDragStart(e, ev)}
-                        className="event"
-                      >
-                        Подія {ev.id}
-                      </div>
-                    ))
-                  }
-                </div>
-              );
-            })}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <Dialog 
@@ -157,11 +167,25 @@ function ScheduleOfVisits() {
         </DialogTitle>
         <DialogContent>
           {selectedDay && (
-            <p>Деталі для {selectedDay.label} {selectedDay.date.toLocaleDateString('uk-UA')}</p>
+            <>
+              <p>Деталі для {selectedDay.label} {selectedDay.date.toLocaleDateString('uk-UA')}</p>
+              <ul>
+                {events
+                  .filter(ev => ev.d === selectedDay.dIndex)
+                  .map(ev => (
+                    <li key={ev.id}>
+                      Подія {ev.id}: з {ev.start}:00 до {ev.end}:00
+                    </li>
+                  ))
+                }
+              </ul>
+            </>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseModal} variant="contained">Закрити</Button>
+        <Button variant="outlined" onClick={handleCloseModal} color="error">
+          Закрити 
+        </Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -3,7 +3,7 @@
     overflow-y: auto;
     margin-bottom: 50px;
     user-select: none;
-    padding: 10px;
+    padding: 15px;
   }
   
   .week-nav {
@@ -20,6 +20,24 @@
   
   .calendar-grid {
     display: flex;
+  }
+  
+  .hour-column {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .hour-label {
+    height: 40px;
+    border: 1px solid #ccc;
+    text-align: right;
+    padding-right: 5px;
+    box-sizing: border-box;
+  }
+  
+  .days-columns {
+    display: flex;
+    flex: 1;
   }
   
   .day-column {
@@ -58,4 +76,6 @@
     margin: 1px;
     cursor: grab;
   }
+  
+
   

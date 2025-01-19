@@ -8,7 +8,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import ChatIcon from '@mui/icons-material/Chat';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PersonIcon from '@mui/icons-material/Person';
-import ScheduleOfVisits from '../../components/Doctor/featureTab/ScheduleOfVisits';
+import TabSchedule from '../../components/Doctor/featureTab/TabSchedule';
 
 export default function DoctorDashboard() {
     const [activeTab, setActiveTab] = useState('pending');
@@ -47,7 +47,7 @@ export default function DoctorDashboard() {
             key: 'schedule',
             label: 'Розклад',
             icon: <CalendarTodayIcon style={{ fontSize: 40, color: '#4caf50' }}/>,
-            component: <ScheduleOfVisits/>
+            component: <TabSchedule/>
         },
         {
             key: 'patients',
