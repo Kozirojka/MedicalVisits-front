@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/Login/Login.css';
 
@@ -64,6 +64,11 @@ export default function Login() {
         </div>
         <button type="submit" className="submitButton">Увійти</button>
       </form>
+      <div className="registerLink">
+           <br/>
+          <p>Ще не зареєстровані? <br/>
+            <Link to="/register">Зареєструйтесь тут</Link></p>
+        </div>
     </div>
   </div>
   )  

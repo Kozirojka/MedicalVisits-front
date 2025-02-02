@@ -56,8 +56,14 @@
   
   .time-slot {
     position: relative;
-    height: 40px;
+    height: 40px; 
     border: 1px solid #ccc;
+    transition: background-color 0.2s ease;
+  }
+  
+  .time-slot:hover {
+    background-color: rgba(14, 140, 243, 0.33);
+    cursor: pointer; 
   }
   
   .time-slot.selected {
