@@ -1,11 +1,12 @@
-import ScheduleOfVisits from "../../Calendar/CalendarInTab/ScheduleOfVisits";
+import Schedule from "../../Calendar/Schedule";
+import CustomizedTimeline from "../../Calendar/CustomizedTimeline";
 
 const TabSchedule = () => {
 
 
     return(
         <>
-            <ScheduleOfVisits/>
+            <CustomizedTimeline />
         </>
     )
 };
