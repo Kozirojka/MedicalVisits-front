@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from '@mui/material';
 import './Calendar.css';
 
 const Calendar = () => {
@@ -9,6 +16,7 @@ const Calendar = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [newAppointment, setNewAppointment] = useState(null);
 
+  // Мок дані
   const mockAppointments = [
     { id: 1, day: '2023-10-01', start: '10:00', end: '11:00', title: 'Meeting' },
     { id: 2, day: '2023-10-02', start: '14:00', end: '15:00', title: 'Lunch' },
@@ -25,18 +33,18 @@ const Calendar = () => {
     setAppointments(mockAppointments);
   }, []);
 
-  const formatDate = (date) => 
+  const formatDate = (date) =>
     date.toLocaleDateString('uk-UA', { day: '2-digit', month: 'long', year: 'numeric' });
 
   const convertPixelsToTime = (pixels) => {
     const slotIndex = Math.floor(pixels / 20);
     const hour = Math.floor(slotIndex / 2).toString().padStart(2, '0');
-    const minute = (slotIndex % 2 === 0 ? '00' : '30');
+    const minute = slotIndex % 2 === 0 ? '00' : '30';
     return `${hour}:${minute}`;
   };
 
-  const checkCollision = (day, start, end) => 
-    appointments.some(app => 
+  const checkCollision = (day, start, end) =>
+    appointments.some(app =>
       app.day === day && (
         (start >= app.start && start < app.end) ||
         (end > app.start && end <= app.end) ||
@@ -48,7 +56,7 @@ const Calendar = () => {
     const dayString = day.toISOString().split('T')[0];
     const start = convertPixelsToTime(startY);
     const end = convertPixelsToTime(endY);
-    
+
     if (!checkCollision(dayString, start, end)) {
       setAppointments(prev => [...prev, {
         id: prev.length + 1,
@@ -60,6 +68,16 @@ const Calendar = () => {
     } else {
       alert('Час зайнятий!');
     }
+  };
+
+  const handleAppointmentClick = (appointment) => {
+    setSelectedAppointment(appointment);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteAppointment = () => {
+    setAppointments(prev => prev.filter(a => a.id !== selectedAppointment.id));
+    setIsModalOpen(false);
   };
 
   return (
@@ -90,19 +108,38 @@ const Calendar = () => {
             newAppointment={newAppointment}
             formatDate={formatDate}
             convertPixelsToTime={convertPixelsToTime}
+            onAppointmentClick={handleAppointmentClick}
           />
         ))}
       </div>
 
-      {isModalOpen && selectedAppointment && (
-        <Modal appointment={selectedAppointment} onClose={() => setIsModalOpen(false)} />
-      )}
+      {/* Material UI Dialog */}
+      <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <DialogTitle>Деталі події</DialogTitle>
+        <DialogContent>
+          {selectedAppointment && (
+            <div>
+              <p><strong>Назва:</strong> {selectedAppointment.title}</p>
+              <p><strong>Час:</strong> {selectedAppointment.start} - {selectedAppointment.end}</p>
+              <p><strong>Дата:</strong> {formatDate(new Date(selectedAppointment.day))}</p>
+            </div>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteAppointment} color="error">
+            Видалити
+          </Button>
+          <Button onClick={() => setIsModalOpen(false)} color="primary">
+            Закрити
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
 
-const DayColumn = React.memo(({ 
-  day, 
+const DayColumn = React.memo(({
+  day,
   appointments,
   isCreating,
   newAppointment,
@@ -110,14 +147,17 @@ const DayColumn = React.memo(({
   convertPixelsToTime,
   onStartCreate,
   onUpdateCreate,
-  onFinishCreate
+  onFinishCreate,
+  onAppointmentClick
 }) => {
   const [gridRef, setGridRef] = useState(null);
 
   const handleMouseDown = (e) => {
-    const rect = gridRef.getBoundingClientRect();
-    const startY = e.clientY - rect.top;
-    onStartCreate(startY);
+    if (!e.target.closest('.appointment')) {
+      const rect = gridRef.getBoundingClientRect();
+      const startY = e.clientY - rect.top;
+      onStartCreate(startY);
+    }
   };
 
   const handleMouseMove = (e) => {
@@ -131,7 +171,7 @@ const DayColumn = React.memo(({
   return (
     <div className="day-column">
       <div className="day-header">{formatDate(day)}</div>
-      <div 
+      <div
         className="day-grid"
         ref={setGridRef}
         onMouseDown={handleMouseDown}
@@ -141,16 +181,20 @@ const DayColumn = React.memo(({
       >
         {!isCreating && Array.from({ length: 48 }).map((_, i) => (
           <div key={i} className="time-slot">
-            {i % 2 === 0 ? `${i/2}:00` : `${Math.floor(i/2)}:30`}
+            {i % 2 === 0 ? `${i / 2}:00` : `${Math.floor(i / 2)}:30`}
           </div>
         ))}
 
         {appointments.map(app => (
-          <Appointment key={app.id} app={app} onClick={() => {}} />
+          <Appointment
+            key={app.id}
+            app={app}
+            onClick={() => onAppointmentClick(app)}
+          />
         ))}
 
         {newAppointment && (
-          <div 
+          <div
             className="appointment creating"
             style={{
               top: newAppointment.startY,
@@ -171,25 +215,17 @@ const Appointment = React.memo(({ app, onClick }) => {
   const height = (app.end.split(':')[0] * 2 + (app.end.split(':')[1] === '30' ? 1 : 0) - start[0] * 2 - (start[1] === '30' ? 1 : 0)) * 20;
 
   return (
-    <div 
+    <div
       className="appointment"
       style={{ top: `${top}px`, height: `${height}px` }}
       onClick={onClick}
     >
-      {app.title}<br/>
-      {app.start} - {app.end}
+      <div className="appointment-content">
+        <div className="appointment-title">{app.title}</div>
+        <div className="appointment-time">{app.start} - {app.end}</div>
+      </div>
     </div>
   );
 });
-
-const Modal = ({ appointment, onClose }) => (
-  <div className="modal-overlay">
-    <div className="modal">
-      <h3>{appointment.title}</h3>
-      <p>{appointment.start} - {appointment.end}</p>
-      <button onClick={onClose}>Закрити</button>
-    </div>
-  </div>
-);
 
 export default Calendar;
