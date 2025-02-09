@@ -16,12 +16,6 @@ const Calendar = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [newAppointment, setNewAppointment] = useState(null);
 
-  // Мок дані
-  const mockAppointments = [
-    { id: 1, day: '2023-10-01', start: '10:00', end: '11:00', title: 'Meeting' },
-    { id: 2, day: '2023-10-02', start: '14:00', end: '15:00', title: 'Lunch' },
-  ];
-
   useEffect(() => {
     const today = new Date();
     const daysArray = Array.from({ length: 3 }, (_, i) => {
@@ -30,6 +24,15 @@ const Calendar = () => {
       return date;
     });
     setDays(daysArray);
+
+    const todayString = daysArray[0].toISOString().split('T')[0];
+    const tomorrowString = daysArray[1].toISOString().split('T')[0];
+
+    const mockAppointments = [
+      { id: 1, day: todayString, start: '10:00', end: '11:00', title: 'Meeting with John' },
+      { id: 2, day: tomorrowString, start: '14:00', end: '15:00', title: 'Lunch with Team' },
+    ];
+
     setAppointments(mockAppointments);
   }, []);
 
@@ -58,13 +61,16 @@ const Calendar = () => {
     const end = convertPixelsToTime(endY);
 
     if (!checkCollision(dayString, start, end)) {
-      setAppointments(prev => [...prev, {
-        id: prev.length + 1,
-        day: dayString,
-        start,
-        end,
-        title: 'Нова подія'
-      }]);
+      setAppointments(prev => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          day: dayString,
+          start,
+          end,
+          title: 'Нова подія'
+        }
+      ]);
     } else {
       alert('Час зайнятий!');
     }
@@ -94,10 +100,12 @@ const Calendar = () => {
               setIsCreating(true);
               setNewAppointment({ day, startY, endY: startY + 20 });
             }}
-            onUpdateCreate={(endY) => setNewAppointment(prev => ({
-              ...prev,
-              endY: Math.max(prev.startY + 20, Math.min(endY, 960))
-            }))}
+            onUpdateCreate={(endY) =>
+              setNewAppointment(prev => ({
+                ...prev,
+                endY: Math.max(prev.startY + 20, Math.min(endY, 960))
+              }))
+            }
             onFinishCreate={() => {
               if (newAppointment) {
                 handleCreate(newAppointment.day, newAppointment.startY, newAppointment.endY);
@@ -113,15 +121,21 @@ const Calendar = () => {
         ))}
       </div>
 
-      {/* Material UI Dialog */}
       <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <DialogTitle>Деталі події</DialogTitle>
         <DialogContent>
           {selectedAppointment && (
             <div>
-              <p><strong>Назва:</strong> {selectedAppointment.title}</p>
-              <p><strong>Час:</strong> {selectedAppointment.start} - {selectedAppointment.end}</p>
-              <p><strong>Дата:</strong> {formatDate(new Date(selectedAppointment.day))}</p>
+              <p>
+                <strong>Назва:</strong> {selectedAppointment.title}
+              </p>
+              <p>
+                <strong>Час:</strong> {selectedAppointment.start} - {selectedAppointment.end}
+              </p>
+              <p>
+                <strong>Дата:</strong>{' '}
+                {formatDate(new Date(selectedAppointment.day))}
+              </p>
             </div>
           )}
         </DialogContent>
@@ -138,81 +152,89 @@ const Calendar = () => {
   );
 };
 
-const DayColumn = React.memo(({
-  day,
-  appointments,
-  isCreating,
-  newAppointment,
-  formatDate,
-  convertPixelsToTime,
-  onStartCreate,
-  onUpdateCreate,
-  onFinishCreate,
-  onAppointmentClick
-}) => {
-  const [gridRef, setGridRef] = useState(null);
+const DayColumn = React.memo(
+  ({
+    day,
+    appointments,
+    isCreating,
+    newAppointment,
+    formatDate,
+    convertPixelsToTime,
+    onStartCreate,
+    onUpdateCreate,
+    onFinishCreate,
+    onAppointmentClick,
+  }) => {
+    const [gridRef, setGridRef] = useState(null);
 
-  const handleMouseDown = (e) => {
-    if (!e.target.closest('.appointment')) {
-      const rect = gridRef.getBoundingClientRect();
-      const startY = e.clientY - rect.top;
-      onStartCreate(startY);
-    }
-  };
+    const handleMouseDown = (e) => {
+      if (!e.target.closest('.appointment')) {
+        const rect = gridRef.getBoundingClientRect();
+        const startY = e.clientY - rect.top;
+        onStartCreate(startY);
+      }
+    };
 
-  const handleMouseMove = (e) => {
-    if (isCreating && gridRef) {
-      const rect = gridRef.getBoundingClientRect();
-      const endY = e.clientY - rect.top;
-      onUpdateCreate(endY);
-    }
-  };
+    const handleMouseMove = (e) => {
+      if (isCreating && gridRef) {
+        const rect = gridRef.getBoundingClientRect();
+        const endY = e.clientY - rect.top;
+        onUpdateCreate(endY);
+      }
+    };
 
-  return (
-    <div className="day-column">
-      <div className="day-header">{formatDate(day)}</div>
-      <div
-        className="day-grid"
-        ref={setGridRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={onFinishCreate}
-        onMouseLeave={onFinishCreate}
-      >
-        {!isCreating && Array.from({ length: 48 }).map((_, i) => (
-          <div key={i} className="time-slot">
-            {i % 2 === 0 ? `${i / 2}:00` : `${Math.floor(i / 2)}:30`}
-          </div>
-        ))}
+    return (
+      <div className="day-column">
+        <div className="day-header">{formatDate(day)}</div>
+        <div
+          className="day-grid"
+          ref={setGridRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={onFinishCreate}
+          onMouseLeave={onFinishCreate}
+        >
+          {!isCreating &&
+            Array.from({ length: 48 }).map((_, i) => (
+              <div key={i} className="time-slot">
+                {i % 2 === 0 ? `${i / 2}:00` : `${Math.floor(i / 2)}:30`}
+              </div>
+            ))}
 
-        {appointments.map(app => (
-          <Appointment
-            key={app.id}
-            app={app}
-            onClick={() => onAppointmentClick(app)}
-          />
-        ))}
+          {appointments.map((app) => (
+            <Appointment
+              key={app.id}
+              app={app}
+              onClick={() => onAppointmentClick(app)}
+            />
+          ))}
 
-        {newAppointment && (
-          <div
-            className="appointment creating"
-            style={{
-              top: newAppointment.startY,
-              height: newAppointment.endY - newAppointment.startY
-            }}
-          >
-            {convertPixelsToTime(newAppointment.startY)} - {convertPixelsToTime(newAppointment.endY)}
-          </div>
-        )}
+          {newAppointment && (
+            <div
+              className="appointment creating"
+              style={{
+                top: newAppointment.startY,
+                height: newAppointment.endY - newAppointment.startY,
+              }}
+            >
+              {convertPixelsToTime(newAppointment.startY)} -{' '}
+              {convertPixelsToTime(newAppointment.endY)}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 const Appointment = React.memo(({ app, onClick }) => {
-  const start = app.start.split(':');
-  const top = (parseInt(start[0]) * 2 + (start[1] === '30' ? 1 : 0)) * 20;
-  const height = (app.end.split(':')[0] * 2 + (app.end.split(':')[1] === '30' ? 1 : 0) - start[0] * 2 - (start[1] === '30' ? 1 : 0)) * 20;
+  const [startHour, startMinute] = app.start.split(':');
+  const [endHour, endMinute] = app.end.split(':');
+  const top = (parseInt(startHour, 10) * 2 + (startMinute === '30' ? 1 : 0)) * 20;
+  const height =
+    ((parseInt(endHour, 10) * 2 + (endMinute === '30' ? 1 : 0)) -
+      (parseInt(startHour, 10) * 2 + (startMinute === '30' ? 1 : 0))) *
+    20;
 
   return (
     <div
@@ -222,7 +244,9 @@ const Appointment = React.memo(({ app, onClick }) => {
     >
       <div className="appointment-content">
         <div className="appointment-title">{app.title}</div>
-        <div className="appointment-time">{app.start} - {app.end}</div>
+        <div className="appointment-time">
+          {app.start} - {app.end}
+        </div>
       </div>
     </div>
   );
