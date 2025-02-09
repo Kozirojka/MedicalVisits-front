@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from '@mui/material';
-import './Calendar.css';
+import React, { useState, useEffect } from "react";
+import Drawer from "@mui/material/Drawer";
+import { Button } from "@mui/material";
+import "./Calendar.css";
 
 const Calendar = () => {
   const [days, setDays] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [newAppointment, setNewAppointment] = useState(null);
 
@@ -25,90 +20,116 @@ const Calendar = () => {
     });
     setDays(daysArray);
 
-    const todayString = daysArray[0].toISOString().split('T')[0];
-    const tomorrowString = daysArray[1].toISOString().split('T')[0];
+    const todayString = daysArray[0].toISOString().split("T")[0];
+    const tomorrowString = daysArray[1].toISOString().split("T")[0];
 
     const mockAppointments = [
-      { id: 1, day: todayString, start: '10:00', end: '11:00', title: 'Meeting with John' },
-      { id: 2, day: tomorrowString, start: '14:00', end: '15:00', title: 'Lunch with Team' },
+      {
+        id: 1,
+        day: todayString,
+        start: "10:00",
+        end: "11:00",
+        title: "Meeting with John",
+      },
+      {
+        id: 2,
+        day: tomorrowString,
+        start: "14:00",
+        end: "15:00",
+        title: "Lunch with Team",
+      },
     ];
 
     setAppointments(mockAppointments);
   }, []);
 
   const formatDate = (date) =>
-    date.toLocaleDateString('uk-UA', { day: '2-digit', month: 'long', year: 'numeric' });
+    date.toLocaleDateString("uk-UA", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
 
   const convertPixelsToTime = (pixels) => {
     const slotIndex = Math.floor(pixels / 20);
-    const hour = Math.floor(slotIndex / 2).toString().padStart(2, '0');
-    const minute = slotIndex % 2 === 0 ? '00' : '30';
+    const hour = Math.floor(slotIndex / 2)
+      .toString()
+      .padStart(2, "0");
+    const minute = slotIndex % 2 === 0 ? "00" : "30";
     return `${hour}:${minute}`;
   };
 
   const checkCollision = (day, start, end) =>
-    appointments.some(app =>
-      app.day === day && (
-        (start >= app.start && start < app.end) ||
-        (end > app.start && end <= app.end) ||
-        (start <= app.start && end >= app.end)
-      )
+    appointments.some(
+      (app) =>
+        app.day === day &&
+        ((start >= app.start && start < app.end) ||
+          (end > app.start && end <= app.end) ||
+          (start <= app.start && end >= app.end))
     );
 
   const handleCreate = (day, startY, endY) => {
-    const dayString = day.toISOString().split('T')[0];
+    const dayString = day.toISOString().split("T")[0];
     const start = convertPixelsToTime(startY);
     const end = convertPixelsToTime(endY);
 
     if (!checkCollision(dayString, start, end)) {
-      setAppointments(prev => [
+      setAppointments((prev) => [
         ...prev,
         {
           id: prev.length + 1,
           day: dayString,
           start,
           end,
-          title: 'Нова подія'
-        }
+          title: "Нова подія",
+        },
       ]);
     } else {
-      alert('Час зайнятий!');
+      alert("Час зайнятий!");
     }
   };
 
   const handleAppointmentClick = (appointment) => {
     setSelectedAppointment(appointment);
-    setIsModalOpen(true);
+    setIsDrawerOpen(true);
   };
 
   const handleDeleteAppointment = () => {
-    setAppointments(prev => prev.filter(a => a.id !== selectedAppointment.id));
-    setIsModalOpen(false);
+    setAppointments((prev) =>
+      prev.filter((a) => a.id !== selectedAppointment.id)
+    );
+    setIsDrawerOpen(false);
   };
 
   return (
     <div className="calendar-container">
       <h2>Календар</h2>
       <div className="days-container">
-        {days.map(day => (
+        {days.map((day) => (
           <DayColumn
             key={day.toISOString()}
             day={day}
-            appointments={appointments.filter(a => a.day === day.toISOString().split('T')[0])}
+            appointments={appointments.filter(
+              (a) => a.day === day.toISOString().split("T")[0]
+            )}
             isCreating={isCreating}
             onStartCreate={(startY) => {
               setIsCreating(true);
               setNewAppointment({ day, startY, endY: startY + 20 });
             }}
             onUpdateCreate={(endY) =>
-              setNewAppointment(prev => ({
+              setNewAppointment((prev) => ({
                 ...prev,
-                endY: Math.max(prev.startY + 20, Math.min(endY, 960))
+                endY: Math.max(prev.startY + 20, Math.min(endY, 960)),
               }))
             }
             onFinishCreate={() => {
               if (newAppointment) {
-                handleCreate(newAppointment.day, newAppointment.startY, newAppointment.endY);
+                handleCreate(
+                  newAppointment.day,
+                  newAppointment.startY,
+                  newAppointment.endY
+                );
                 setIsCreating(false);
                 setNewAppointment(null);
               }
@@ -121,33 +142,47 @@ const Calendar = () => {
         ))}
       </div>
 
-      <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <DialogTitle>Деталі події</DialogTitle>
-        <DialogContent>
+      <Drawer
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      >
+        <div style={{ padding: 16 }}>
           {selectedAppointment && (
             <div>
+              <h3>Деталі події</h3>
               <p>
                 <strong>Назва:</strong> {selectedAppointment.title}
               </p>
               <p>
-                <strong>Час:</strong> {selectedAppointment.start} - {selectedAppointment.end}
+                <strong>Час:</strong> {selectedAppointment.start} -{" "}
+                {selectedAppointment.end}
               </p>
               <p>
-                <strong>Дата:</strong>{' '}
+                <strong>Дата:</strong>{" "}
                 {formatDate(new Date(selectedAppointment.day))}
               </p>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  onClick={handleDeleteAppointment}
+                  color="error"
+                  variant="contained"
+                >
+                  Видалити
+                </Button>
+                <Button
+                  onClick={() => setIsDrawerOpen(false)}
+                  color="primary"
+                  variant="contained"
+                  style={{ marginLeft: 8 }}
+                >
+                  Закрити
+                </Button>
+              </div>
             </div>
           )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteAppointment} color="error">
-            Видалити
-          </Button>
-          <Button onClick={() => setIsModalOpen(false)} color="primary">
-            Закрити
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </div>
+      </Drawer>
     </div>
   );
 };
@@ -168,7 +203,7 @@ const DayColumn = React.memo(
     const [gridRef, setGridRef] = useState(null);
 
     const handleMouseDown = (e) => {
-      if (!e.target.closest('.appointment')) {
+      if (!e.target.closest(".appointment")) {
         const rect = gridRef.getBoundingClientRect();
         const startY = e.clientY - rect.top;
         onStartCreate(startY);
@@ -217,7 +252,7 @@ const DayColumn = React.memo(
                 height: newAppointment.endY - newAppointment.startY,
               }}
             >
-              {convertPixelsToTime(newAppointment.startY)} -{' '}
+              {convertPixelsToTime(newAppointment.startY)} -{" "}
               {convertPixelsToTime(newAppointment.endY)}
             </div>
           )}
@@ -228,12 +263,14 @@ const DayColumn = React.memo(
 );
 
 const Appointment = React.memo(({ app, onClick }) => {
-  const [startHour, startMinute] = app.start.split(':');
-  const [endHour, endMinute] = app.end.split(':');
-  const top = (parseInt(startHour, 10) * 2 + (startMinute === '30' ? 1 : 0)) * 20;
+  const [startHour, startMinute] = app.start.split(":");
+  const [endHour, endMinute] = app.end.split(":");
+  const top =
+    (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0)) * 20;
   const height =
-    ((parseInt(endHour, 10) * 2 + (endMinute === '30' ? 1 : 0)) -
-      (parseInt(startHour, 10) * 2 + (startMinute === '30' ? 1 : 0))) *
+    (parseInt(endHour, 10) * 2 +
+      (endMinute === "30" ? 1 : 0) -
+      (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0))) *
     20;
 
   return (
