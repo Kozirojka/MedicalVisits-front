@@ -1,4 +1,7 @@
 // components/NearestDoctorsModal.jsx
+
+
+//modal windows for selecting the nearest doctors
 export default function NearestDoctorsModal({ isOpen, onClose, doctors, onSelectDoctor }) {
     if (!isOpen) return null;
 

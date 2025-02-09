@@ -1,4 +1,3 @@
-// utils/dateUtils.js
 export const formatDateTime = (dateTime) => {
     if (!dateTime) return 'Не вказано';
     const date = new Date(dateTime);

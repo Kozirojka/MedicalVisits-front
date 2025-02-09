@@ -1,7 +1,7 @@
 // src/App.js
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ProtectedRoute } from './contexts/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import DoctorDashboard from './pages/Doctor/DoctorDashboard';

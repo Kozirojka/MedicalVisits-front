@@ -1,7 +1,8 @@
-import VisitRequestCard from "../../Doctor/VisitRequestPendingCard";
+import VisitRequestCard from "../VisitRequestCard";
 import { useState } from "react";
-import ScheduleCalendar from "../../Doctor/ScheduleCalendar";
+import ScheduleCalendar from "../ScheduleCalendar";
 import "../../../styles/Doctor/ScheduleCalendar.css";
+import {BASE_API} from '../../../constants/BASE_API'
 
 export default function RequestForConfirm({ requests, loading, error }) {
   const [showCalendarModal, setShowCalendarModal] = useState(false);
@@ -25,7 +26,7 @@ export default function RequestForConfirm({ requests, loading, error }) {
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
-        `http://localhost:5268/api/Doctor/assign-visit`,
+        `${BASE_API}/Doctor/assign-visit`,
         {
           method: "POST",
           headers: {

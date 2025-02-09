@@ -1,3 +1,6 @@
+import {BASE_API} from '../../constants/BASE_API';
+
+
 export const assignDoctorToVisit = async (doctorId, visitId) => {
     try {
         const token = localStorage.getItem('accessToken');
@@ -10,7 +13,7 @@ export const assignDoctorToVisit = async (doctorId, visitId) => {
 
         console.log('Дані для відправки:', data); 
 
-        const response = await fetch('http://localhost:5268/api/Admin/Attach-VisitRequest', {
+        const response = await fetch(`${BASE_API}/Admin/Attach-VisitRequest`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

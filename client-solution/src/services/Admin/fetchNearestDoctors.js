@@ -1,3 +1,5 @@
+import {BASE_API} from '../../constants/BASE_API';
+
 export async function fetchNearestDoctors(VisitRequestId) {
     if (VisitRequestId <= 0) {
         throw new Error("Ідентифікатор запиту повинен бути більше 0.");
@@ -11,7 +13,7 @@ export async function fetchNearestDoctors(VisitRequestId) {
     console.log(token);
 
     try {
-        const response = await fetch(`http://localhost:5268/api/admin/doctors/nearest/${VisitRequestId}`, {
+        const response = await fetch(`${BASE_API}/admin/doctors/nearest/${VisitRequestId}`, {
             method: "GET",
             headers: {
                 'Authorization': `Bearer ${token}`,

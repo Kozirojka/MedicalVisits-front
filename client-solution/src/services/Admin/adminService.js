@@ -1,7 +1,8 @@
-// services/adminService.js
+import {BASE_API} from '../../constants/BASE_API';
+
 export const fetchVisitRequests = async () => {
     const token = localStorage.getItem('accessToken');
-    const response = await fetch('http://localhost:5268/api/Admin/VisitsRequest', {
+    const response = await fetch(`${BASE_API}/Admin/VisitsRequest`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

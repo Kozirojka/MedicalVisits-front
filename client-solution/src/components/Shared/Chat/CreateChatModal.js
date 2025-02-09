@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Card } from 'react-bootstrap';
+import { BASE_API } from '../../../constants/BASE_API';
 
 const CreateChatModal = ({ onClose, onChatCreated }) => {
   const [chatName, setChatName] = useState('');
@@ -19,7 +20,7 @@ const CreateChatModal = ({ onClose, onChatCreated }) => {
       role: selectedUser.role
     });
 
-    fetch("http://localhost:5268/api/Chat/private-chat", {
+    fetch(`${BASE_API}/Chat/private-chat`, {
       method: 'POST',
        headers: {
         'Authorization': `Bearer ${token}`,
@@ -42,7 +43,7 @@ const CreateChatModal = ({ onClose, onChatCreated }) => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
 
-    fetch("http://localhost:5268/api/Chat/users", {
+    fetch(`${BASE_API}/Chat/users`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`

@@ -1,12 +1,8 @@
-// RequestsTab.jsx
-
 import { useState, useEffect } from 'react';
 import VisitRequestCard from '../VisitRequestCard';
 import { fetchVisitRequests } from '../../../services/Admin/adminService';
-import { assignDoctorToVisit } from '../../../services/Admin/adminAssignDoctorToVisit';
+import { assignDoctorToVisit } from '../../../services/Admin/assignDoctorToVisit';
 
-// немає css
-//import '../../../styles/Admin/RequestsTab.css';
 
 export default function RequestsTab() {
   const [requests, setRequests] = useState([]);
@@ -45,7 +41,6 @@ export default function RequestsTab() {
   };
 
   useEffect(() => {
-    // При першому відображенні вкладки можна одразу завантажувати дані
     handleFetchRequests();
   }, []);
 

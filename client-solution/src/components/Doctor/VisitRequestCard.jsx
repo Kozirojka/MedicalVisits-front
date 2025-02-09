@@ -1,9 +1,11 @@
 import { formatDateTime } from "../../utils/dateUtils";
 import { useState } from "react";
-import "../../styles/Doctor/styleForPendingCard.css";
+import "../../styles/Doctor/styleVisitRequestCard.css";
 import "../../styles/Doctor/ScheduleCalendar.css";
 import Button from '@mui/material/Button';
+import {BASE_API} from '../../constants/BASE_API';
 
+//Its code for rendering card on doctor page
 export default function VisitRequestCard({ request, onOpenCalendar }) {
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ export default function VisitRequestCard({ request, onOpenCalendar }) {
       );
 
       const response = await fetch(
-        `http://localhost:5268/api/Doctor/assign-visit`,
+        `${BASE_API}/Doctor/assign-visit`,
         {
           method: "POST",
           headers: {

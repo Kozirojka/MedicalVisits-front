@@ -1,10 +1,10 @@
-// ChatApp.js - Переписаний для використання в ChatTab
 
 import * as signalR from "@microsoft/signalr";
 import { useEffect, useState } from "react";
-import "../../styles/ChatStyles/Chat.css";
+import "./ChatApp.css";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
+import { BASE_API} from '../../../constants/BASE_API';
 
 export function ChatApp({ roomId, currentUser, clear = [] }) {
     const [connection, setConnection] = useState(null);
@@ -59,7 +59,7 @@ export function ChatApp({ roomId, currentUser, clear = [] }) {
         const token = localStorage.getItem('accessToken');
 
 
-        const response = await fetch(`http://localhost:5268/api/Chat/${chatId}/history`,
+        const response = await fetch(`${BASE_API}/Chat/${chatId}/history`,
         {
             method: 'GET',
             headers: {

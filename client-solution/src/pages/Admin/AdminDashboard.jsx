@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/Admin/AdminDashboard.css';
 import RequestsTab from '../../components/Admin/featureTabs/RequestsTab';
-import Sidebar from '../../components/Shared/Sidebar';
+import Sidebar from '../../components/Shared/Sidebar/Sidebar';
 
 export default function AdminDashboard() {
     const { logout } = useAuth();

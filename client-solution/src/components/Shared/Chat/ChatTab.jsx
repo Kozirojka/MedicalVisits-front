@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; 
-import "../../styles/ChatStyles/ChatTab.css";
-import CreateChatModal from '../Chat/CreateChatModal';
+import "./ChatTab.css";
+import CreateChatModal from './CreateChatModal';
 import { useEffect } from "react";
-import { ChatApp } from '../../components/Chat/ChatApp'
-import { ChatItem } from '../Chat/ChatItem'
-
+import { ChatApp } from './ChatApp'
+import { ChatItem } from './ChatItem'
+import {BASE_API} from '../../../constants/BASE_API';
 
 export default function ChatTab() {
     const [chats, setChats] = useState([]);
@@ -23,7 +23,7 @@ export default function ChatTab() {
     const fetchChats = async () => {
         try {
             const token = localStorage.getItem('accessToken');
-            const response = await fetch("http://localhost:5268/api/Chat/chats", {
+            const response = await fetch(`${BASE_API}/Chat/chats`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`

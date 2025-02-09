@@ -1,7 +1,7 @@
 import { formatDateTime } from '../../utils/dateUtils';
 import NearestDoctorsModal from './NearestDoctorsModal';
 import { useState } from 'react';
-import { fetchNearestDoctors } from '../../services/Admin/adminLookingForNearestDoctor';
+import { fetchNearestDoctors } from '../../services/Admin/fetchNearestDoctors';
 
 export default function VisitRequestCard({ request, onAssignDoctor }) {
 
@@ -30,7 +30,7 @@ export default function VisitRequestCard({ request, onAssignDoctor }) {
 
     const handleSelectDoctor = (doctorId) => {
         console.log('ID лікаря:', doctorId, 'ID запиту:', request.id);
-        onAssignDoctor(doctorId, request.id); // Змінюємо порядок параметрів
+        onAssignDoctor(doctorId, request.id); 
         setShowDoctorsModal(false);
     };
 
@@ -48,25 +48,20 @@ export default function VisitRequestCard({ request, onAssignDoctor }) {
            </div>
 
            <div className="card-content">
-               {/* Дата і час початку */}
                <div className="info-row">
                    <span className="label">Час початку:</span>
                    <span>{formatDateTime(request.dateTimeStart)}</span>
                </div>
 
-               {/* Дата і час закінчення */}
                <div className="info-row">
                    <span className="label">Час закінчення:</span>
                    <span>{formatDateTime(request.dateTimeEnd) || 'Не вказано'}</span>
                </div>
 
-               {/* Опис */}
                <div className="info-row">
                    <span className="label">Опис:</span>
                    <span>{request.description}</span>
                </div>
-
-               {/* Адреса */}
                <div className="info-row">
                    <span className="label">Адреса:</span>
                    <span>

@@ -1,8 +1,8 @@
-const BASE_URL = 'http://localhost:5268/api/auth';
+import { BASE_API} from '../../constants/BASE_API';
 
 export const authService = {
   async login(email, password) {
-    const response = await fetch(`${BASE_URL}/login`, {
+    const response = await fetch(`${BASE_API}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export const authService = {
   },
 
   async register(userData) {
-    const response = await fetch(`${BASE_URL}/register`, {
+    const response = await fetch(`${BASE_API}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

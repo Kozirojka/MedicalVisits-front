@@ -1,7 +1,9 @@
+import {BASE_API} from '../../constants/BASE_API';
+
 export const fetchVisitPendingRequests = async () => {
     try {
         const token = localStorage.getItem('accessToken');
-        const response = await fetch('http://localhost:5268/api/v2/doctor/visits/pending-visits', {
+        const response = await fetch(`${BASE_API}/v2/doctor/visits/pending-visits`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

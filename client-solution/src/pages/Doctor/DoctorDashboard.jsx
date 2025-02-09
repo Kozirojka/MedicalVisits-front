@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import '../../styles/Doctor/DoctorDashboard.css';
 import { fetchVisitPendingRequests } from '../../services/Doctor/fetchPendingVisitRequests';
-import ChatTab from '../../components/Doctor/ChatTab';
-import Sidebar from '../../components/Shared/Sidebar';
-import RequestForConfirm from '../../components/Doctor/featureTab/RequestForConfirm';
+import ChatTab from '../../components/Shared/Chat/ChatTab';
+import Sidebar from '../../components/Shared/Sidebar/Sidebar';
+import RequestForConfirm from '../../components/Doctor/featureTab/TabForConfirmRequest';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ChatIcon from '@mui/icons-material/Chat';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';

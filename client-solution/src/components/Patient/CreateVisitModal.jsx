@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import {BASE_API} from '../../constants/BASE_API';
 
 async function createVisitRequest(visitData) {
    try {
@@ -10,7 +11,7 @@ async function createVisitRequest(visitData) {
        const token = localStorage.getItem('accessToken');
        console.log('Дані, які надсилаються:', visitData);
        console.log(token);
-       const response = await fetch('http://localhost:5268/api/Patient/request', {
+       const response = await fetch(`${BASE_API}/Patient/request`, {
            method: 'POST',
            headers: {
                'Content-Type': 'application/json',
@@ -83,7 +84,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
                )}
                
                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                   {/* DateTime Start */}
                    <div className="form-group">
                        <label htmlFor="dateTime">Start Date and Time:</label>
                        <input
@@ -97,7 +97,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
                        />
                    </div>
 
-                   {/* DateTime End */}
                    <div className="form-group">
                        <label htmlFor="dateTimeEnd">End Date and Time:</label>
                        <input
@@ -111,7 +110,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
                        />
                    </div>
 
-                    {/* Address */}
                     <div className="form-group">
                     <label htmlFor="address">Address:</label>
                     <input
@@ -125,7 +123,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
                     />
                     </div>
 
-                    {/*Is regular */}
                     <div className="form-group">
                     <label htmlFor="isRegular">Is Regular:</label>
                     <input
@@ -138,7 +135,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
                     </div>
 
 
-                   {/* Description */}
                    <div className="form-group">
                        <label htmlFor="description">Description:</label>
                        <textarea
@@ -152,7 +148,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
                        />
                    </div>
 
-                   {/* Has Medicine Checkbox */}
                    <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                        <input
                            type="checkbox"
@@ -164,7 +159,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
                        <label htmlFor="hasMedicine">Need Medications</label>
                    </div>
 
-                   {/* Required Medications (conditional rendering) */}
                    {visitData.hasMedicine && (
                        <div className="form-group">
                            <label htmlFor="requiredMedications">Required Medications:</label>
@@ -180,7 +174,6 @@ export default function CreateVisitModal({ isOpen, onClose }) {
                        </div>
                    )}
 
-                   {/* Buttons */}
                    <div style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'flex-end' }}>
                        <button 
                            type="submit" 

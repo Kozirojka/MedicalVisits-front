@@ -1,14 +1,12 @@
 // src/pages/PatientDashboard.jsx
 import { useState } from 'react';
-import CreateVisitModal from '../../components/CreateVisitModal';
+import CreateVisitModal from '../../components/Patient/CreateVisitModal';
 import '../../styles/Patient/PatientDashboard.css';
-import { useNavigate } from 'react-router-dom';
 
 
 export default function PatientDashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const navigate = useNavigate();
 
     return (
         <div className="patient-dashboard">
