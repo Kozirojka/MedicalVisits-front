@@ -58,8 +58,6 @@ export default function ChatTab() {
                 </button>
                 <ul className="chat-list">
                     
-                    {/* У цей код потрібно було добавити знак 
-                    запитання, адже при рендерингу значення selectChat з самого початку == null*/}
                     {chats.map((chat) => (
                         <ChatItem
                             key={chat.id}

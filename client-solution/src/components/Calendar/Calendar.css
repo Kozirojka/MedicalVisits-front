@@ -1,0 +1,106 @@
+/* Calendar.css */
+.calendar-container {
+  padding: 20px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.days-container {
+  display: flex;
+  gap: 15px;
+  padding-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4a90e2 #f0f0f0;
+}
+
+.day-column {
+  flex: 1;
+  min-width: 250px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.day-header {
+  padding: 15px;
+  background: #4a90e2;
+  color: white;
+  border-radius: 12px 12px 0 0;
+  font-weight: 500;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.day-grid {
+  position: relative;
+  height: 600px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 0 0 12px 12px;
+}
+
+.time-slot {
+  height: 20px;
+  padding-left: 8px;
+  font-size: 11px;
+  color: #666;
+  border-bottom: 1px solid #eee;
+  user-select: none;
+}
+
+.appointment {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  background: rgba(74, 144, 226, 0.9);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  overflow: hidden;
+  transition: transform 0.1s;
+  z-index: 1;
+}
+
+.appointment-content {
+  padding: 6px;
+  pointer-events: none;
+}
+
+.appointment-title {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.appointment-time {
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.appointment.creating {
+  background: rgba(255, 193, 7, 0.9);
+  z-index: 100;
+  pointer-events: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a90e2;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #357abd;
+}
