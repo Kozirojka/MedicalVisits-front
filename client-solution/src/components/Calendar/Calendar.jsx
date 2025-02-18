@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Drawer from "@mui/material/Drawer";
 import { Button } from "@mui/material";
 import "./Calendar.css";
+import { BASE_API } from "../../constants/BASE_API";
 
 const Calendar = () => {
   const [days, setDays] = useState([]);
@@ -20,27 +21,45 @@ const Calendar = () => {
     });
     setDays(daysArray);
 
-    const todayString = daysArray[0].toISOString().split("T")[0];
-    const tomorrowString = daysArray[1].toISOString().split("T")[0];
+    const fetchAppointments = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
 
-    const mockAppointments = [
-      {
-        id: 1,
-        day: todayString,
-        start: "10:00",
-        end: "11:00",
-        title: "Meeting with John",
-      },
-      {
-        id: 2,
-        day: tomorrowString,
-        start: "14:00",
-        end: "15:00",
-        title: "Lunch with Team",
-      },
-    ];
+        const response = await fetch(`${BASE_API}/doctor/intervals`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-    setAppointments(mockAppointments);
+        const data = await response.json();
+        console.log("-----------------------" + data);
+
+        const formattedAppointments = data.map((interval) => {
+          const start = new Date(interval.startInterval).toLocaleTimeString(
+            "uk-UA",
+            { hour: "2-digit", minute: "2-digit" }
+          );
+          const end = new Date(interval.endInterval).toLocaleTimeString(
+            "uk-UA",
+            { hour: "2-digit", minute: "2-digit" }
+          );
+          return {
+            id: interval.id,
+            day: new Date(interval.startInterval).toISOString().split("T")[0],
+            start,
+            end,
+            title: `Зустріч з лікарем (${interval.doctor.specialization})`,
+          };
+        });
+        setAppointments(formattedAppointments);
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      }
+    };
+
+    fetchAppointments();
   }, []);
 
   const formatDate = (date) =>
@@ -62,29 +81,34 @@ const Calendar = () => {
   const handleDragAppointment = (app, newTime) => {
     setAppointments((prev) =>
       prev.map((a) =>
-        a.id === app.id ? { ...a, start: newTime, end: calculateNewEnd(a.end, newTime) } : a
+        a.id === app.id
+          ? { ...a, start: newTime, end: calculateNewEnd(a.end, newTime) }
+          : a
       )
     );
   };
 
   const calculateNewEnd = (oldEnd, newStart) => {
-    const [startHours, startMinutes] = newStart.split(':').map(Number);
-    const [endHours, endMinutes] = oldEnd.split(':').map(Number);
-    const duration = (endHours * 60 + endMinutes) - (startHours * 60 + startMinutes);
+    const [startHours, startMinutes] = newStart.split(":").map(Number);
+    const [endHours, endMinutes] = oldEnd.split(":").map(Number);
+    const duration =
+      endHours * 60 + endMinutes - (startHours * 60 + startMinutes);
     let newEndHours = startHours + Math.floor(duration / 60);
     let newEndMinutes = startMinutes + (duration % 60);
     if (newEndMinutes >= 60) {
       newEndHours += 1;
       newEndMinutes -= 60;
     }
-    return `${newEndHours.toString().padStart(2, '0')}:${newEndMinutes.toString().padStart(2, '0')}`;
+    return `${newEndHours.toString().padStart(2, "0")}:${newEndMinutes
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const checkCollision = (day, start, end) =>
     appointments.some(
       (app) =>
         app.day === day &&
-        ( (start >= app.start && start < app.end) ||
+        ((start >= app.start && start < app.end) ||
           (end > app.start && end <= app.end) ||
           (start <= app.start && end >= app.end))
     );
@@ -177,10 +201,12 @@ const Calendar = () => {
                 <strong>Назва:</strong> {selectedAppointment.title}
               </p>
               <p>
-                <strong>Час:</strong> {selectedAppointment.start} - {selectedAppointment.end}
+                <strong>Час:</strong> {selectedAppointment.start} -{" "}
+                {selectedAppointment.end}
               </p>
               <p>
-                <strong>Дата:</strong> {formatDate(new Date(selectedAppointment.day))}
+                <strong>Дата:</strong>{" "}
+                {formatDate(new Date(selectedAppointment.day))}
               </p>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
@@ -290,7 +316,8 @@ const DayColumn = React.memo(
                 height: newAppointment.endY - newAppointment.startY,
               }}
             >
-              {convertPixelsToTime(newAppointment.startY)} - {convertPixelsToTime(newAppointment.endY)}
+              {convertPixelsToTime(newAppointment.startY)} -{" "}
+              {convertPixelsToTime(newAppointment.endY)}
             </div>
           )}
         </div>
@@ -302,10 +329,13 @@ const DayColumn = React.memo(
 const Appointment = React.memo(({ app, onClick, onDragStart, onDragEnd }) => {
   const [startHour, startMinute] = app.start.split(":");
   const [endHour, endMinute] = app.end.split(":");
-  const top = (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0)) * 20;
-  const height = 
-    ((parseInt(endHour, 10) * 2 + (endMinute === "30" ? 1 : 0)) - 
-     (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0))) * 20;
+  const top =
+    (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0)) * 20;
+  const height =
+    (parseInt(endHour, 10) * 2 +
+      (endMinute === "30" ? 1 : 0) -
+      (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0))) *
+    20;
 
   return (
     <div
