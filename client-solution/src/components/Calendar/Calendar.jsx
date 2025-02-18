@@ -149,7 +149,6 @@ const Calendar = () => {
 
   return (
     <div className="calendar-container">
-      <h2>Календар</h2>
       <div className="days-container">
         {days.map((day) => (
           <DayColumn
