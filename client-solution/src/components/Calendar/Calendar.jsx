@@ -34,7 +34,8 @@ const Calendar = () => {
         });
 
         const data = await response.json();
-        console.log("-----------------------" + data);
+        console.log("-----------------------", data[0]);
+        console.log("-----------------------", data[1]);
 
         const formattedAppointments = data.map((interval) => {
           const start = new Date(interval.startInterval).toLocaleTimeString(
