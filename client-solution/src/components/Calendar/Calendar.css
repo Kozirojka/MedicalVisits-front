@@ -1,4 +1,3 @@
-/* Calendar.css */
 .calendar-container {
   padding: 20px;
   max-width: 100%;
@@ -36,7 +35,7 @@
 
 .day-grid {
   position: relative;
-  height: 600px;
+  height: 960px; /* Adjusted to match 48 time slots * 20px height */
   overflow-y: auto;
   background: white;
   border-radius: 0 0 12px 12px;
@@ -86,6 +85,7 @@
   pointer-events: none;
 }
 
+/* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

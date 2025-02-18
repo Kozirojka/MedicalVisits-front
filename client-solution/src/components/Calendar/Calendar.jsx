@@ -59,11 +59,32 @@ const Calendar = () => {
     return `${hour}:${minute}`;
   };
 
+  const handleDragAppointment = (app, newTime) => {
+    setAppointments((prev) =>
+      prev.map((a) =>
+        a.id === app.id ? { ...a, start: newTime, end: calculateNewEnd(a.end, newTime) } : a
+      )
+    );
+  };
+
+  const calculateNewEnd = (oldEnd, newStart) => {
+    const [startHours, startMinutes] = newStart.split(':').map(Number);
+    const [endHours, endMinutes] = oldEnd.split(':').map(Number);
+    const duration = (endHours * 60 + endMinutes) - (startHours * 60 + startMinutes);
+    let newEndHours = startHours + Math.floor(duration / 60);
+    let newEndMinutes = startMinutes + (duration % 60);
+    if (newEndMinutes >= 60) {
+      newEndHours += 1;
+      newEndMinutes -= 60;
+    }
+    return `${newEndHours.toString().padStart(2, '0')}:${newEndMinutes.toString().padStart(2, '0')}`;
+  };
+
   const checkCollision = (day, start, end) =>
     appointments.some(
       (app) =>
         app.day === day &&
-        ((start >= app.start && start < app.end) ||
+        ( (start >= app.start && start < app.end) ||
           (end > app.start && end <= app.end) ||
           (start <= app.start && end >= app.end))
     );
@@ -138,6 +159,7 @@ const Calendar = () => {
             formatDate={formatDate}
             convertPixelsToTime={convertPixelsToTime}
             onAppointmentClick={handleAppointmentClick}
+            onDragAppointment={handleDragAppointment}
           />
         ))}
       </div>
@@ -155,12 +177,10 @@ const Calendar = () => {
                 <strong>Назва:</strong> {selectedAppointment.title}
               </p>
               <p>
-                <strong>Час:</strong> {selectedAppointment.start} -{" "}
-                {selectedAppointment.end}
+                <strong>Час:</strong> {selectedAppointment.start} - {selectedAppointment.end}
               </p>
               <p>
-                <strong>Дата:</strong>{" "}
-                {formatDate(new Date(selectedAppointment.day))}
+                <strong>Дата:</strong> {formatDate(new Date(selectedAppointment.day))}
               </p>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
@@ -199,8 +219,10 @@ const DayColumn = React.memo(
     onUpdateCreate,
     onFinishCreate,
     onAppointmentClick,
+    onDragAppointment,
   }) => {
     const [gridRef, setGridRef] = useState(null);
+    const [dragApp, setDragApp] = useState(null);
 
     const handleMouseDown = (e) => {
       if (!e.target.closest(".appointment")) {
@@ -218,6 +240,15 @@ const DayColumn = React.memo(
       }
     };
 
+    const handleDragOver = (e) => {
+      e.preventDefault();
+      if (dragApp) {
+        const rect = gridRef.getBoundingClientRect();
+        const newY = e.clientY - rect.top;
+        onDragAppointment(dragApp, convertPixelsToTime(newY));
+      }
+    };
+
     return (
       <div className="day-column">
         <div className="day-header">{formatDate(day)}</div>
@@ -228,6 +259,8 @@ const DayColumn = React.memo(
           onMouseMove={handleMouseMove}
           onMouseUp={onFinishCreate}
           onMouseLeave={onFinishCreate}
+          onDragOver={handleDragOver}
+          onDrop={onFinishCreate}
         >
           {!isCreating &&
             Array.from({ length: 48 }).map((_, i) => (
@@ -241,6 +274,11 @@ const DayColumn = React.memo(
               key={app.id}
               app={app}
               onClick={() => onAppointmentClick(app)}
+              onDragStart={(e, app) => {
+                e.dataTransfer.setData("text/plain", app.id);
+                setDragApp(app);
+              }}
+              onDragEnd={() => setDragApp(null)}
             />
           ))}
 
@@ -252,8 +290,7 @@ const DayColumn = React.memo(
                 height: newAppointment.endY - newAppointment.startY,
               }}
             >
-              {convertPixelsToTime(newAppointment.startY)} -{" "}
-              {convertPixelsToTime(newAppointment.endY)}
+              {convertPixelsToTime(newAppointment.startY)} - {convertPixelsToTime(newAppointment.endY)}
             </div>
           )}
         </div>
@@ -262,22 +299,22 @@ const DayColumn = React.memo(
   }
 );
 
-const Appointment = React.memo(({ app, onClick }) => {
+const Appointment = React.memo(({ app, onClick, onDragStart, onDragEnd }) => {
   const [startHour, startMinute] = app.start.split(":");
   const [endHour, endMinute] = app.end.split(":");
-  const top =
-    (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0)) * 20;
-  const height =
-    (parseInt(endHour, 10) * 2 +
-      (endMinute === "30" ? 1 : 0) -
-      (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0))) *
-    20;
+  const top = (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0)) * 20;
+  const height = 
+    ((parseInt(endHour, 10) * 2 + (endMinute === "30" ? 1 : 0)) - 
+     (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0))) * 20;
 
   return (
     <div
       className="appointment"
       style={{ top: `${top}px`, height: `${height}px` }}
       onClick={onClick}
+      draggable="true"
+      onDragStart={(e) => onDragStart(e, app)}
+      onDragEnd={onDragEnd}
     >
       <div className="appointment-content">
         <div className="appointment-title">{app.title}</div>
