@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Drawer from "@mui/material/Drawer";
 import { Button } from "@mui/material";
-import "./Calendar.css";
 import { BASE_API } from "../../constants/BASE_API";
+import DayColumn from "./DayColumn";
+import "./Calendar.css";
 
-const Calendar = () => {
+const Calendar = ({visitRequestId = null}) => {
+  
   const [days, setDays] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -34,8 +36,6 @@ const Calendar = () => {
         });
 
         const data = await response.json();
-        console.log("-----------------------", data[0]);
-        console.log("-----------------------", data[1]);
 
         const formattedAppointments = data.map((interval) => {
           const start = new Date(interval.startInterval).toLocaleTimeString(
@@ -232,128 +232,5 @@ const Calendar = () => {
     </div>
   );
 };
-
-const DayColumn = React.memo(
-  ({
-    day,
-    appointments,
-    isCreating,
-    newAppointment,
-    formatDate,
-    convertPixelsToTime,
-    onStartCreate,
-    onUpdateCreate,
-    onFinishCreate,
-    onAppointmentClick,
-    onDragAppointment,
-  }) => {
-    const [gridRef, setGridRef] = useState(null);
-    const [dragApp, setDragApp] = useState(null);
-
-    const handleMouseDown = (e) => {
-      if (!e.target.closest(".appointment")) {
-        const rect = gridRef.getBoundingClientRect();
-        const startY = e.clientY - rect.top;
-        onStartCreate(startY);
-      }
-    };
-
-    const handleMouseMove = (e) => {
-      if (isCreating && gridRef) {
-        const rect = gridRef.getBoundingClientRect();
-        const endY = e.clientY - rect.top;
-        onUpdateCreate(endY);
-      }
-    };
-
-    const handleDragOver = (e) => {
-      e.preventDefault();
-      if (dragApp) {
-        const rect = gridRef.getBoundingClientRect();
-        const newY = e.clientY - rect.top;
-        onDragAppointment(dragApp, convertPixelsToTime(newY));
-      }
-    };
-
-    return (
-      <div className="day-column">
-        <div className="day-header">{formatDate(day)}</div>
-        <div
-          className="day-grid"
-          ref={setGridRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={onFinishCreate}
-          onMouseLeave={onFinishCreate}
-          onDragOver={handleDragOver}
-          onDrop={onFinishCreate}
-        >
-          {!isCreating &&
-            Array.from({ length: 48 }).map((_, i) => (
-              <div key={i} className="time-slot">
-                {i % 2 === 0 ? `${i / 2}:00` : `${Math.floor(i / 2)}:30`}
-              </div>
-            ))}
-
-          {appointments.map((app) => (
-            <Appointment
-              key={app.id}
-              app={app}
-              onClick={() => onAppointmentClick(app)}
-              onDragStart={(e, app) => {
-                e.dataTransfer.setData("text/plain", app.id);
-                setDragApp(app);
-              }}
-              onDragEnd={() => setDragApp(null)}
-            />
-          ))}
-
-          {newAppointment && (
-            <div
-              className="appointment creating"
-              style={{
-                top: newAppointment.startY,
-                height: newAppointment.endY - newAppointment.startY,
-              }}
-            >
-              {convertPixelsToTime(newAppointment.startY)} -{" "}
-              {convertPixelsToTime(newAppointment.endY)}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-);
-
-const Appointment = React.memo(({ app, onClick, onDragStart, onDragEnd }) => {
-  const [startHour, startMinute] = app.start.split(":");
-  const [endHour, endMinute] = app.end.split(":");
-  const top =
-    (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0)) * 20;
-  const height =
-    (parseInt(endHour, 10) * 2 +
-      (endMinute === "30" ? 1 : 0) -
-      (parseInt(startHour, 10) * 2 + (startMinute === "30" ? 1 : 0))) *
-    20;
-
-  return (
-    <div
-      className="appointment"
-      style={{ top: `${top}px`, height: `${height}px` }}
-      onClick={onClick}
-      draggable="true"
-      onDragStart={(e) => onDragStart(e, app)}
-      onDragEnd={onDragEnd}
-    >
-      <div className="appointment-content">
-        <div className="appointment-title">{app.title}</div>
-        <div className="appointment-time">
-          {app.start} - {app.end}
-        </div>
-      </div>
-    </div>
-  );
-});
 
 export default Calendar;

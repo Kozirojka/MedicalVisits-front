@@ -1,7 +1,5 @@
 import VisitRequestCard from "../VisitRequestCard";
 import { useState } from "react";
-//import ScheduleCalendar from "../ScheduleCalendar";
-import "../../../styles/Doctor/ScheduleCalendar.css";
 import {BASE_API} from '../../../constants/BASE_API'
 import Calendar from '../../Calendar/Calendar'
 
@@ -75,7 +73,6 @@ export default function RequestForConfirm({ requests, loading, error }) {
             onClick={(e) => e.stopPropagation()}
           >
             <h1>Обрати час</h1>
-            {/*<ScheduleCalendar onSelect={handleTimeSelect} />*/}
             
             <Calendar/>
             <button
