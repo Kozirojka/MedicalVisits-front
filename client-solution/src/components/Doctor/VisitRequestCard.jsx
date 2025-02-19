@@ -1,52 +1,9 @@
 import { formatDateTime } from "../../utils/dateUtils";
-import { useState } from "react";
 import "../../styles/Doctor/styleVisitRequestCard.css";
 import "../../styles/Doctor/ScheduleCalendar.css";
-import Button from '@mui/material/Button';
-import {BASE_API} from '../../constants/BASE_API';
+import Button from "@mui/material/Button";
 
-//Its code for rendering card on doctor page
 export default function VisitRequestCard({ request, onOpenCalendar }) {
-  const [showCalendarModal, setShowCalendarModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleTimeSelect = async (timeSlotId) => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("accessToken");
-
-      console.log(
-        "Нагаємось відіслати вже в handleTimeSelect" +
-          timeSlotId +
-          "send id of visit " +
-          request.id
-      );
-
-      const response = await fetch(
-        `${BASE_API}/Doctor/assign-visit`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            timeSlotId: timeSlotId,
-            VisitRequestId: request.id,
-          }),
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to assign time");
-
-      setShowCalendarModal(false);
-    } catch (error) {
-      console.error("Error assigning time:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="request-card">
       <div className="card-header">
@@ -83,8 +40,8 @@ export default function VisitRequestCard({ request, onOpenCalendar }) {
         </div>
 
         <Button
-            variant="contained"        
-            color="primary"
+          variant="contained"
+          color="primary"
           onClick={() => onOpenCalendar(request)}
         >
           Встановити час
