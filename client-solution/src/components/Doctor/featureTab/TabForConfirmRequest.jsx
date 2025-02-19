@@ -74,7 +74,7 @@ export default function RequestForConfirm({ requests, loading, error }) {
           >
             <h1>Обрати час</h1>
             
-            <Calendar/>
+            <Calendar visitRequestId={selectedRequest.id}/>
             <button
               className="close-btn"
               onClick={() => setShowCalendarModal(false)}

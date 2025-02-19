@@ -5,14 +5,16 @@ import { BASE_API } from "../../constants/BASE_API";
 import DayColumn from "./DayColumn";
 import "./Calendar.css";
 
-const Calendar = ({visitRequestId = null}) => {
-  
+
+const Calendar = ({ visitRequestId = null }) => {
   const [days, setDays] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [newAppointment, setNewAppointment] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [appointmentDetails, setAppointmentDetails] = useState(null);
 
   useEffect(() => {
     const today = new Date();
@@ -114,22 +116,26 @@ const Calendar = ({visitRequestId = null}) => {
           (start <= app.start && end >= app.end))
     );
 
+    const combineDateTime = (dateStr, timeStr) => {
+      const [hours, minutes] = timeStr.split(":"); 
+      const date = new Date(dateStr);
+      date.setUTCHours(hours, minutes, 0, 0); 
+  
+      return date.toISOString();
+    };
+
   const handleCreate = (day, startY, endY) => {
-    const dayString = day.toISOString().split("T")[0];
+    const dayString = day.toISOString();
     const start = convertPixelsToTime(startY);
     const end = convertPixelsToTime(endY);
 
     if (!checkCollision(dayString, start, end)) {
-      setAppointments((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          day: dayString,
-          start,
-          end,
-          title: "Нова подія",
-        },
-      ]);
+      setAppointmentDetails({
+        day: dayString,
+        startData: combineDateTime(dayString, start),
+        endData: combineDateTime(dayString, end),
+      });
+      setShowConfirmationModal(true);
     } else {
       alert("Час зайнятий!");
     }
@@ -147,6 +153,35 @@ const Calendar = ({visitRequestId = null}) => {
     setIsDrawerOpen(false);
   };
 
+
+  const createAppointment = () => {
+
+    if (visitRequestId) {
+
+      const { day, ...filteredDetails } = appointmentDetails;
+
+      console.log("--------", filteredDetails);
+
+      fetch(`${BASE_API}/doctor/interval`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          visitRequestId: visitRequestId,
+          ...filteredDetails 
+        }),
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to confirm appointment');
+        }
+        console.log('Appointment confirmed');
+      }).catch(error => {
+        console.error('Error confirming appointment:', error);
+      });
+    }
+  }
   return (
     <div className="calendar-container">
       <div className="days-container">
@@ -187,6 +222,27 @@ const Calendar = ({visitRequestId = null}) => {
           />
         ))}
       </div>
+
+      {showConfirmationModal && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowConfirmationModal(false)}
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Підтвердження створення для візиту {visitRequestId}</h3>
+            <p> 
+              Ви впевнені, що хочете створити цей відрізок для запиту на
+              допомогу?
+            </p>
+            <p>Дата: {appointmentDetails.day}</p>
+            <p>
+              Час: {appointmentDetails.start} - {appointmentDetails.end}
+            </p>
+            <button onClick={() => createAppointment()}>Так</button>
+            <button onClick={() => setShowConfirmationModal(false)}>Ні</button>
+          </div>
+        </div>
+      )}
 
       <Drawer
         anchor="right"
