@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { BASE_API } from "../../constants/BASE_API";
 import DayColumn from "./DayColumn";
 import "./Calendar.css";
-
+import RoadMap from "../Map/RoadMap";
 
 const Calendar = ({ visitRequestId = null }) => {
   const [days, setDays] = useState([]);
@@ -15,6 +15,8 @@ const Calendar = ({ visitRequestId = null }) => {
   const [newAppointment, setNewAppointment] = useState(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [appointmentDetails, setAppointmentDetails] = useState(null);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(null);
 
   useEffect(() => {
     const today = new Date();
@@ -116,13 +118,13 @@ const Calendar = ({ visitRequestId = null }) => {
           (start <= app.start && end >= app.end))
     );
 
-    const combineDateTime = (dateStr, timeStr) => {
-      const [hours, minutes] = timeStr.split(":"); 
-      const date = new Date(dateStr);
-      date.setUTCHours(hours, minutes, 0, 0); 
-  
-      return date.toISOString();
-    };
+  const combineDateTime = (dateStr, timeStr) => {
+    const [hours, minutes] = timeStr.split(":");
+    const date = new Date(dateStr);
+    date.setUTCHours(hours, minutes, 0, 0);
+
+    return date.toISOString();
+  };
 
   const handleCreate = (day, startY, endY) => {
     const dayString = day.toISOString();
@@ -153,14 +155,28 @@ const Calendar = ({ visitRequestId = null }) => {
     setIsDrawerOpen(false);
   };
 
+  const handleOpenCalendar = (day) => {
+    console.log(day);
+
+    const year = day.getFullYear();
+    const month = day.getMonth();
+    const date = day.getDate();
+
+    const formattedDay = new Date(Date.UTC(year, month, date, 1, 0, 0));
+
+    console.log(formattedDay.toISOString());
+
+    setSelectedDay(formattedDay.toISOString());
+    setShowCalendarModal(true);
+  };
+
+  const handleCloseCalendar = () => {
+    setShowCalendarModal(false);
+  };
 
   const createAppointment = () => {
-
     if (visitRequestId) {
-
       const { day, ...filteredDetails } = appointmentDetails;
-
-      console.log("--------", filteredDetails);
 
       fetch(`${BASE_API}/doctor/interval`, {
         method: "POST",
@@ -170,18 +186,20 @@ const Calendar = ({ visitRequestId = null }) => {
         },
         body: JSON.stringify({
           visitRequestId: visitRequestId,
-          ...filteredDetails 
+          ...filteredDetails,
         }),
-      }).then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to confirm appointment');
-        }
-        console.log('Appointment confirmed');
-      }).catch(error => {
-        console.error('Error confirming appointment:', error);
-      });
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to confirm appointment");
+          }
+          console.log("Appointment confirmed");
+        })
+        .catch((error) => {
+          console.error("Error confirming appointment:", error);
+        });
     }
-  }
+  };
   return (
     <div className="calendar-container">
       <div className="days-container">
@@ -219,9 +237,27 @@ const Calendar = ({ visitRequestId = null }) => {
             convertPixelsToTime={convertPixelsToTime}
             onAppointmentClick={handleAppointmentClick}
             onDragAppointment={handleDragAppointment}
+            onHandleViewRoadmap={handleOpenCalendar}
           />
         ))}
       </div>
+
+      {showCalendarModal && (
+        <div className="modal-overlay" onClick={handleCloseCalendar}>
+          <div
+            className={`popup ${showCalendarModal ? "visible" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <RoadMap selectedDay={selectedDay}/>
+            <button
+              className="close-btn"
+              onClick={() => setShowCalendarModal(false)}
+            >
+              Закрити
+            </button>
+          </div>
+        </div>
+      )}
 
       {showConfirmationModal && (
         <div
@@ -230,7 +266,7 @@ const Calendar = ({ visitRequestId = null }) => {
         >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>Підтвердження створення для візиту {visitRequestId}</h3>
-            <p> 
+            <p>
               Ви впевнені, що хочете створити цей відрізок для запиту на
               допомогу?
             </p>

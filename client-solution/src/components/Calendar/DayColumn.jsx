@@ -15,6 +15,7 @@ const DayColumn = React.memo(
     onFinishCreate,
     onAppointmentClick,
     onDragAppointment,
+    onHandleViewRoadmap
   }) => {
     const [gridRef, setGridRef] = useState(null);
     const [dragApp, setDragApp] = useState(null);
@@ -46,7 +47,7 @@ const DayColumn = React.memo(
 
     return (
       <div className="day-column">
-        <div className="day-header">{formatDate(day)}</div>
+        <div className="day-header" onClick={() => onHandleViewRoadmap(day)}>{formatDate(day)}</div>
         <div
           className="day-grid"
           ref={setGridRef}
